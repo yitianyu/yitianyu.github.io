@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>商业地产筹备篇之 03- 商业定位之业态规划 | Hexo</title>
-  <meta name="keywords" content=" 商业地产筹备 ">
-  <meta name="description" content="商业地产筹备篇之 03- 商业定位之业态规划 | Hexo">
+  <title>HDFS Federation 设计动机与基本原理 | Hexo</title>
+  <meta name="keywords" content=" hadoop ">
+  <meta name="description" content="HDFS Federation 设计动机与基本原理 | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="HDFS Federation 是 Hadoop 最新发布版本 Hadoop-0.23.0 中为解决 HDFS 单点故障而提出的 namenode 水平扩展方案。该方案允许 HDFS 创建多个 namespace 以提高集群的扩展性和隔离性。本篇文章主要介绍了 HDFS Federation 的设计动机和基本原理。  1. 当前 HDFS 概况  1.1 当前 HDFS 架构   当前 HDFS">
 <meta property="og:type" content="article">
@@ -316,9 +316,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-商业地产筹备篇之03-商业定位之业态规划" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-HDFS-Federation设计动机与基本原理" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">商业地产筹备篇之 03- 商业定位之业态规划</h1>
+        <h1 class="article-title">HDFS Federation 设计动机与基本原理</h1>
     
     <div class="article-meta">
         
@@ -327,19 +327,19 @@
         
         <span class="tag">
             
-            <a class="color2">商业地产筹备</a>
+            <a class="color2">hadoop</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-04-01 00:49:08'>2020-04-01 00:29</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-01 11:40:49'>2020-04-01 11:21</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:2.9k</span>
+        <span>字数:1.8k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -374,79 +374,57 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>​          </p>
-<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B03-%E5%95%86%E4%B8%9A%E5%AE%9A%E4%BD%8D%E4%B9%8B%E4%B8%9A%E6%80%81%E8%A7%84%E5%88%92/01.png" alt></p>
-<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B03-%E5%95%86%E4%B8%9A%E5%AE%9A%E4%BD%8D%E4%B9%8B%E4%B8%9A%E6%80%81%E8%A7%84%E5%88%92/02.gif" alt></p>
-<p><strong>03- 商业定位之业态规划</strong></p>
-<p>  商业地产项目的业态规划，是开发商根据项目城市现有业态状况和对未来商业发展趋势的把握，充分利用自身可能整合的各种招商资源，为便于该楼盘作为房地产项目实现销售和该项目作为商业地产日后能够成功运营而对项目各功能分区和各楼层的业态所进行的规划。业态组合定位必须在项目开发前期完成！</p>
-<p>  商业业态规划：商业业态指的是经营者为满足不同的消费需求而形成的经营模式或经营形态，其分类主要依据经营主体的多少（是一个还是多个）、目标市场、经营理念、服务功能、立店规模、选址、目标顾客、商品结构、店堂设施和装修标准、商品进货渠道（从厂家还是分销商处进货）和募集方式（是中央采购还是单店进货）等等。</p>
-<p>购物中心根据项目定位及建筑条件（体量、空间结构等），确定业态的种类、分布及比例，并制定相应的业态规划及业态组合。</p>
-<p>业态规划是前期招商的纲领性生文件，是招商实施的指南。购物中心业态的选择和规划应符合三个原则：</p>
-<p>(1）定位优先原则；<br>        (2）功能完整性原则；<br>        (3）业态相关性原则。</p>
-<p><strong>01</strong></p>
-<p><strong>业态种类</strong></p>
-<hr>
-<p>购物中心的业态一般有：零售业态、休闲娱乐业态、餐饮业态和体验服务业态。以往，购物中心以零售业态为主，通过不断的发展，休闲娱乐、餐饮和体验服务业态在购物中心的比例逐渐增大，发挥的作用也日益明显。</p>
-<p><strong>1. 零售业态</strong></p>
-<p>零售业态主要有百货、超市、便利店、专业店和专卖店。零售业态品类的完整性，决定了购物中心能否满足消费者生活用品的需求。</p>
-<p>百货涵盖珠宝、化妆品、服饰、家居用品等品类；超市主要以日常生活必需品为主，以较低的价格销售，满足消费者日常需求；专业店主要有家居、电器、数码专业店等品类，在单一品类中商品系列齐全；专卖店是专门经营或授权经营某一品牌商品为主的零售业态。</p>
-<p> <strong>2 . 娱乐业态</strong></p>
-<p>娱乐业态有电影院、 K 刊、电玩城、溜冰场、酒吧、健身馆等。与其他业态不同的是，娱乐业态更强调消费者的参考和互动。娱乐业态在选择相关业种时会更多考虑与其他业态的关联与互动。</p>
-<p>娱乐业态，是现代购物中心满足消费者一站式消费的重要组成部分，具有群体消费和重复消费的特性，增强了购物中心的丰富性、活跃度。</p>
-<p> <strong>3. 餐饮业态</strong></p>
-<p>  餐饮业态是体验性消费的重要代表。中国的购物中心不是卖出来的，是吃出来的，可见餐饮业态的重要性。餐饮业态具有极强的聚客能力，能充分满足人们社交和家庭生活的需要。</p>
-<p>购物中心内的餐饮一般分为以下几种形式中餐、西餐、咖啡水吧。</p>
-<p>餐饮业态一般位于购物中心的较高楼层，可以实现客流由上而下，形成花洒效应，对拉动购物中心人气起到重要作用。规划餐饮业态时，应注重口味的丰富性，避免口味重复。只有丰富性的餐饮才能最大限度地为消费者提供多元的选择，对消费者保持长期的吸引力。同时，还要充分挖掘地方餐饮资源，因为地方餐饮品牌更贴合当地市场，早已为当地消费者广泛接受并拥有大批忠诚顾客。地方特色餐饮的进驻，会大大缩短购物中心的培育期。</p>
-<p><strong>4 . 体验业态</strong></p>
-<p>体验业态是购物中心的增值配套服务业态，是对购物中心生活功能性的完善与补充，相比传统零售而言，体验业态更注重对消费者服务的价值，对空间和环境的要求也更高。</p>
-<p>体验业态粘性较强，消费者滞留时间长；易于形成稳定的消费群，培养稳定的消费习惯；既能满足人们日常生活配套需求，又能迎合大众的精神追求（图 1 一 8 ）。</p>
-<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B03-%E5%95%86%E4%B8%9A%E5%AE%9A%E4%BD%8D%E4%B9%8B%E4%B8%9A%E6%80%81%E8%A7%84%E5%88%92/03.jpg" alt></p>
-<p><strong>02</strong></p>
-<p><strong>业态组合</strong></p>
-<p>　　业态组合主要涉及三个方面, 即业态选择、业态配比及业态衔接。</p>
-<p><strong>1. 业态选择</strong></p>
-<p>　　业态选择必须符合购物中心的整体定位, 同时结合购物中心的自身条件 (建筑体量、空间结构等) 及当地居民的消费习惯来展开。</p>
-<p><strong>1)商业功能定位对业态选择的影响</strong></p>
-<p>　　不同城市不同区域的购物中心, 因其承载的基本功能有较大差异, 业态组合的区别也十分明显。例如, 上海五角场万达广场属于城市型购物中心, 除设有百货、大型超市、电影院、KTV、儿童零售卖场、服装服饰、餐饮酒楼外, 还设有家居家饰、书城、食品零售专业店、黄金珠宝城、数码卖场, 业态齐全。而北京石景山万达广场为区域型购物中心, 主要由百货、超市、电影院、KTV、电玩、儿童娱乐、时尚服装服饰和风味美食构成, 以满足北京城西居民生活、休闲、娱乐的基本需求。</p>
-<p><strong>2)商品级次定位对业态选择的影响</strong></p>
-<p>　　精品购物中心、时尚购物中心、生活购物中心, 这三种购物中心的商品级次定位不同, 目标人群的消费特征就不同, 这必然会影响到购物中心的业态选择。</p>
-<p>精品购物中心通常选择国内外级次较高的品类, 如奢侈品、名品、高端餐饮、精品超市及各类有固定高端消费群体的体验业态; 时尚购物中心通常选择各业态中的时尚品牌, 在确保人气的基础上保持整个项目的时尚格调; 生活购物中心通常选择生活超市、美食广场及健身、教育、美容、美发等体验业态。</p>
-<p><strong>2. 业态配比</strong></p>
-<p>为了将购物中心的面积合理利用, 必须对各业态进行合理的配比。合理的业态配比能够完善品类结构功能, 更好地满足消费需求, 提高聚客能力(表 1-4)。</p>
-<p> <img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B03-%E5%95%86%E4%B8%9A%E5%AE%9A%E4%BD%8D%E4%B9%8B%E4%B8%9A%E6%80%81%E8%A7%84%E5%88%92/04.jpg" alt></p>
-<p><strong>业态配比应遵循以下原则</strong></p>
-<p> <strong>(1)适用性</strong>: 根据不同业态的要求, 提供适用的面积。</p>
-<p> <strong>(2)高坪效</strong>: 在满足适用性原则的基础上, 在区间内尽可能适度地压缩, 以提高销售坪效。</p>
-<p> <strong>(3)互补性</strong>: 业态要实现差异化, 避免重复, 注重业态间的关联消费, 业态组合要符合目标消费群的需求。</p>
-<p><strong>3. 业态衔接</strong></p>
-<p>　　业态布局和衔接首先要认真研究城市动线和购物中心动线, 明确购物中心主次通道及冷热区域, 根据业态经营特性, 并结合购物中心自身的经营需求, 合理规划。</p>
-<p>　　各个业态之间衔接是否顺畅、合理, 关系到消费的舒适感及流畅性, 也在某种程度上决定了顾客逗留的时间长短以及交易量大小。因而, 对购物中心来说，业态落位衔接的合理性是确保客流动线流畅、提高商铺到达率、提升总体销售的重要途径。</p>
-<p>　　<strong>业态衔接需遵循以下原则：</strong></p>
-<p>　　(1)零售业态需放在热区, 品牌级次和客单价高的品牌店应放置在热区主入口、主通道。</p>
-<p>　　(2)娱乐业态因属目的性消费, 应放置在冷区, 通过业态自身带动周边客流。</p>
-<p>　　(3)餐饮业态应放置在高楼层, 布局要集中, 形成规模化。</p>
-<p>　　(4)体验业态作为业态补充, 目的性消费强, 但承租能力差, 可放置在冷区次通道。</p>
-<p>　　<strong>不同业态之间的穿插、过渡可从以下两个维度进行思考：</strong></p>
-<p>　　第一, 功能互补性, 即功能特征明确统一的业态彼此相邻。</p>
-<p>　　第二, 客群一致性, 即根据客群的消费特征划分消费主题区域, 并落实到功能业态的组合衔接上。</p>
-<p>万达广场业态组合, 如表 1-5 所示。</p>
-<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B03-%E5%95%86%E4%B8%9A%E5%AE%9A%E4%BD%8D%E4%B9%8B%E4%B8%9A%E6%80%81%E8%A7%84%E5%88%92/05.jpg" alt></p>
-<p><strong>03</strong></p>
-<p><strong>规划购物中心业态</strong></p>
-<p>  购物中心的业态也是非常的重要的呢，那么我们怎么样去规划呢，作为商业地产运营来说，规划在无论是哪个行业都是特别的重要的呢，所以这里我们也就来简单的阐述！</p>
-<p>  第一：选择的区域很重要，我们的一个选址对于每一个店面都是特别的重要，所以第一要素必须是这个选址，做好位置的规划，也就是我们的第一区域环境!</p>
-<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B03-%E5%95%86%E4%B8%9A%E5%AE%9A%E4%BD%8D%E4%B9%8B%E4%B8%9A%E6%80%81%E8%A7%84%E5%88%92/06.jpg" alt></p>
-<p>  第二：做好方案，业态规划，一般来说都不可能只有一个方案，我们都是会多做几个方案来改善我们的内容，尤其是这个方案（非常重要），永远都有必备方案二！</p>
-<p>  第三：功能的定位也是非常的重要的呢，我们会选择很多的功能来完善这个业务，这个购物中心，那么我们如何去做这也是非常的重要的，我们购物中心有些就是一体化的游乐和吃喝，有些就是不一样了，可能只有购物！</p>
-<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B03-%E5%95%86%E4%B8%9A%E5%AE%9A%E4%BD%8D%E4%B9%8B%E4%B8%9A%E6%80%81%E8%A7%84%E5%88%92/07.jpg" alt></p>
-<p>  第四：业态的相关，我们一定要去落实这个相关的工作，这样的话可以更好的对我们的客户进行这个营销，不然目标客群对于我们来说都是不太有力的，这些最好还要进行一个前期的调查！</p>
-<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B03-%E5%95%86%E4%B8%9A%E5%AE%9A%E4%BD%8D%E4%B9%8B%E4%B8%9A%E6%80%81%E8%A7%84%E5%88%92/08.jpg" alt></p>
-<p>  第五：规模的选择，不得不说我们在外面逛这种购物中心的时候会根据我们的客户群体来选择这个规模，这个也是特别的重要的，规模一定要小有规模！包括我们规模走位也是特别的重要的！</p>
-<p>  第六：实际的操作方法也是需要的，一站式的餐饮购物中心，也是超级的好的呢，有些时候我们这些都是要考虑，生活体验也是我们规划的一部分，我们的这个定位真的是特别的重要的，所以一定要准备好！</p>
-<p>  第七：具体的里面的业态的分布，我们也是需要考虑到，长远的发展，租金的要求，也是特别的重要的，不能过于高，也不能太低，一切都是要掌握之中的呢！长久经营一定要考虑！</p>
-<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B03-%E5%95%86%E4%B8%9A%E5%AE%9A%E4%BD%8D%E4%B9%8B%E4%B8%9A%E6%80%81%E8%A7%84%E5%88%92/09.jpg" alt></p>
-<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B03-%E5%95%86%E4%B8%9A%E5%AE%9A%E4%BD%8D%E4%B9%8B%E4%B8%9A%E6%80%81%E8%A7%84%E5%88%92/10.png" alt></p>
-<p>素材来源：万达学院，YYS_商业地产商学院，版权归原作者所有，转载好文只是作为行业分享，不做任何商业用途，若有侵权请在留言板留言，我们会立刻删除并致歉，谢谢！</p>
+        <p>HDFS Federation 是 Hadoop 最新发布版本 Hadoop-0.23.0 中为解决 HDFS 单点故障而提出的 namenode 水平扩展方案。该方案允许 HDFS 创建多个 namespace 以提高集群的扩展性和隔离性。本篇文章主要介绍了 HDFS Federation 的设计动机和基本原理。 </p>
+<p><strong>1. 当前 HDFS 概况 </strong></p>
+<p><strong>1.1 当前 HDFS 架构 </strong></p>
+<p> 当前 HDFS 包含两层结构：  </p>
+<p>（1） <strong>Namespace</strong> 管理目录，文件和数据块。它支持常见的文件系统操作，如创建文件，修改文件，删除文件等。  </p>
+<p>（2） <strong>Block Storage</strong> 有两部分组成：  </p>
+<p><strong>Block Management</strong> 维护集群中 datanode 的基本关系，它支持数据块相关的操作，如：创建数据块，删除数据块等，同时，它也会管理副本的复制和存放。</p>
+<p>  <strong>Physical Storage</strong> 存储实际的数据块并提供针对数据块的读写服务。  </p>
+<p>【Block Storage 的这两部分分别在 namenode 和 datanode 上实现，所以该模块由 namenode 和 datanode 分工完成】 </p>
+<p><img src="/2020/04/01/HDFS-Federation%E8%AE%BE%E8%AE%A1%E5%8A%A8%E6%9C%BA%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/01.jpg" alt></p>
+<p> 当前 HDFS 架构只允许整个集群中存在一个 namespace，而该 namespace 被仅有的一个 namenode 管理。这个架构使得 HDFS 非常容易实现，但是，它（见上图）在具体实现过程中会出现一些模糊点，进而导致了很多局限性（下面将要详细说明），当然这些局限性只有在拥有大集群的公司，像 baidu，腾讯等出现。  </p>
+<p><strong>1.2 当前 HDFS 局限性 </strong></p>
+<p><strong>【Block Storage 和 namespace 高耦合】</strong></p>
+<p> 当前 namenode 中的 namespace 和 block management 的结合使得这两层架构耦合在一起，难以让其他可能 namenode 实现方案直接使用 block storage。  </p>
+<p><strong>【namenode 扩展性】</strong></p>
+<p>  HDFS 的底层存储是可以水平扩展的（解释：底层存储指的是 datanode，当集群存储空间不够时，可简单的添加机器已进行水平扩展），但 namespace 不可以。当前的 namespace 只能存放在单个 namenode 上，而 namenode 在内存中存储了整个分布式文件系统中的元数据信息，这限制了集群中数据块，文件和目录的数目。  </p>
+<p><strong>【性能】</strong></p>
+<p>  文件操作的性能制约于单个 namenode 的吞吐量，单个 namenode 当前仅支持约 60K 的 task，而下一代 Apache MapReduce 将支持多余 100K 的并发任务，这隐含着要支持多个 namenode。</p>
+<p><strong>【隔离性】</strong></p>
+<p> 现在大部分公司的集群都是共享的，每天有来自不同 group 的不同用户提交作业。单个 namenode 难以提供隔离性，即：某个用户提交的负载很大的 job 会减慢其他用户的 job，单一的 namenode 难以像 HBase 按照应用类别将不同作业分派到不同 namenode 上。  </p>
+<p><strong>2.HDFS Federation</strong></p>
+<p><strong>2.1 为什么采用 Federation</strong></p>
+<p>​    </p>
+<p> 采用 Federation 的最主要原因是简单，Federation 能够快速的解决了大部分单 Namenode 的问题。           </p>
+<p> Federation 整个核心设计实现大概用了 4 个月。大部分改变是在 Datanode、Config 和 Tools，而 Namenode 本身的改动非常少，这样 Namenode 原先的鲁棒性不会受到影响。这使得该方案与之前的 HDFS 版本兼容。  </p>
+<p><strong>2.2Federation 架构 </strong>  </p>
+<p><img src="/2020/04/01/HDFS-Federation%E8%AE%BE%E8%AE%A1%E5%8A%A8%E6%9C%BA%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/02.jpg" alt> </p>
+<p> 为了水平扩展 namenode，federation 使用了多个独立的 namenode/namespace。这些 namenode 之间是联合的，也就是说，他们之间相互独立且不需要互相协调，各自分工，管理自己的区域。分布式的 datanode 被用作通用的数据块存储存储设备。每个 datanode 要向集群中所有的 namenode 注册，且周期性地向所有 namenode 发送心跳和块报告，并执行来自所有 namenode 的命令。</p>
+<p>  一个 block pool 由属于同一个 namespace 的数据块组成，每个 datanode 可能会存储集群中所有 block pool 的数据块。  </p>
+<p> 每个 block pool 内部自治，也就是说各自管理各自的 block，不会与其他 block pool 交流。一个 namenode 挂掉了，不会影响其他 namenode。</p>
+<p>  某个 namenode 上的 namespace 和它对应的 block pool 一起被称为 namespace volume。它是管理的基本单位。当一个 namenode/nodespace 被删除后，其所有 datanode 上对应的 block pool 也会被删除。当集群升级时，每个 namespace volume 作为一个基本单元进行升级。</p>
+<p><strong>2.3Federation 关键技术点 </strong></p>
+<p> <strong>【命名空间管理】</strong></p>
+<p>  Federation 中存在多个命名空间，如何划分和管理这些命名空间非常关键。在 Federation 中并采用“文件名 hash”的方法，因为该方法的 locality 非常差，比如：查看某个目录下面的文件，如果采用文件名 hash 的方法存放文件，则这些文件可能被放到不同 namespace 中，HDFS 需要访问所有 namespace，代价过大。为了方便管理多个命名空间，HDFS Federation 采用了经典的 Client Side Mount Table。  </p>
+<p><img src="/2020/04/01/HDFS-Federation%E8%AE%BE%E8%AE%A1%E5%8A%A8%E6%9C%BA%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/03.jpg" alt></p>
+<p>​     如上图所示，下面四个深色三角形代表一个独立的命名空间，上方浅色的三角形代表从客户角度去访问的子命名空间。各个深色的命名空间 Mount 到浅色的表中，客户可以访问不同的挂载点来访问不同的命名空间，这就如同在 Linux 系统中访问不同挂载点一样。这就是 HDFS Federation 中命名空间管理的基本原理：将各个命名空间挂载到全局 mount-table 中，就可以做将数据到全局共享；同样的命名空间挂载到个人的 mount-table 中，这就成为应用程序。 </p>
+<p><strong>2.4 主要优点 </strong>  </p>
+<p><strong>【扩展性和隔离性】</strong>  </p>
+<p> 支持多个 namenode 水平扩展整个文件系统的 namespace。可按照应用程序的用户和种类分离 namespace volume，进而增强了隔离性。  </p>
+<p><strong>【通用存储服务】</strong>  </p>
+<p>Block Pool 抽象层为 HDFS 的架构开启了创新之门。分离 block storage layer 使得： </p>
+<p> &lt;1&gt; 新的文件系统（non-HDFS）可以在 block storage 上构建。</p>
+<p>  &lt;2&gt; 新的应用程序（如 HBase）可以直接使用 block storage 层。</p>
+<p>  &lt;3&gt; 分离的 block storage 层为将来完全分布式 namespace 打下基础。  </p>
+<p><strong>【设计简单】</strong></p>
+<p>  Federation 整个核心设计实现大概用了 4 个月。大部分改变是在 Datanode、Config 和 Tools 中，而 Namenode 本身的改动非常少，这样 Namenode 原先的鲁棒性不会受到影响。虽然这种实现的扩展性比起真正的分布式的 Namenode 要小些，但是可以迅速满足需求，另外 Federation 具有良好的向后兼容性，已有的单 Namenode 的部署配置不需要任何改变就可以继续工作  。</p>
+<p><strong>3.HDFS Federation 不足 </strong>  </p>
+<p><strong>【单点故障问题】</strong>  </p>
+<p>HDFS Federation 并没有完全解决单点故障问题。虽然 namenode/namespace 存在多个，但是从单个 namenode/namespace 看，仍然存在单点故障：如果某个 namenode 挂掉了，其管理的相应的文件便不可以访问。Federation 中每个 namenode 仍然像之前 HDFS 上实现一样，配有一个 secondary namenode，以便主 namenode 挂掉一下，用于还原元数据信息。  </p>
+<p><strong>【负载均衡问题】</strong></p>
+<p>  HDFS Federation 采用了 Client Side Mount Table 分摊文件和负载，该方法更多的需要人工介入已达到理想的负载均衡。 </p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 15023696012@163.com </span>
@@ -460,12 +438,12 @@
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>商业地产筹备篇之 03- 商业定位之业态规划</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">2.9k</span></p>
+    <p><span class="copy-title">文章标题:</span>HDFS Federation 设计动机与基本原理</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">1.8k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="YYS_三师兄">YYS_三师兄</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-04-01, 00:29:49</p>
-    <p><span class="copy-title">最后更新:</span>2020-04-01, 00:49:08</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B03-%E5%95%86%E4%B8%9A%E5%AE%9A%E4%BD%8D%E4%B9%8B%E4%B8%9A%E6%80%81%E8%A7%84%E5%88%92/" title="商业地产筹备篇之 03- 商业定位之业态规划">http://yoursite.com/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B03-%E5%95%86%E4%B8%9A%E5%AE%9A%E4%BD%8D%E4%B9%8B%E4%B8%9A%E6%80%81%E8%A7%84%E5%88%92/</a>
+    <p><span class="copy-title">发布时间:</span>2020-04-01, 11:21:14</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-01, 11:40:49</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/01/HDFS-Federation%E8%AE%BE%E8%AE%A1%E5%8A%A8%E6%9C%BA%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/" title="HDFS Federation 设计动机与基本原理">http://yoursite.com/2020/04/01/HDFS-Federation%E8%AE%BE%E8%AE%A1%E5%8A%A8%E6%9C%BA%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
