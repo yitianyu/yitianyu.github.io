@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Hadoop 错误日志 | Hexo</title>
+  <title>Hadoop 性能调优 | Hexo</title>
   <meta name="keywords" content=" Hadoop ">
-  <meta name="description" content="Hadoop 错误日志 | Hexo">
+  <meta name="description" content="Hadoop 性能调优 | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="1.Jvm 重用 JVM 重用不是指同一 Job 的两个或两个以上的 Task 同时运行于同一 JVM 上，而是 N 个 Task 按顺序在同一个 Jvm 上运行，即省去了 Jvm 关闭和再重启的时间。N 值可以在 Hadoop 的 mapre-site.xml 文件。mapreduce.job.jvm.numtasks(默认 1)属性进行设置。也可在 hive 的执行设置：set mapred.">
 <meta property="og:type" content="article">
@@ -336,9 +336,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-Hadoop错误日志" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-Hadoop性能调优" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Hadoop 错误日志</h1>
+        <h1 class="article-title">Hadoop 性能调优</h1>
     
     <div class="article-meta">
         
@@ -354,12 +354,12 @@
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-04-01 12:07:13'>2020-04-01 11:52</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-01 12:23:30'>2020-04-01 12:15</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:998</span>
+        <span>字数:782</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -394,34 +394,24 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>​           </p>
-<p><strong>1. 错误日志：</strong><br>            Directory /tmp/hadoop-root/dfs/name is in an inconsistent state: storage directory does not exist or is not accessible.  </p>
-<p><strong>错误原因:</strong><br>        在 Linux 下 Hadoop 等的各种数据默认保存在 /tmp 目录下。当重启系统后 /tmp 目录中的数据信息被清除，导致 Hadoop 启动失败。确定目录 /tmp/hadoop-root/dfs/name 是否存在。</p>
-<p><strong>解决方案：</strong><br>    使用命令 bin/hadoop namenode -format 格式化 NN，即可正常启动。</p>
-<p><strong>2. 错误日志：</strong><br>        Incompatible namespaceIDS in … :namenode namespaceID = … ,datanode namespaceID=…  </p>
-<p><strong>错误原因：</strong><br>        格式化 NameNode 后会重新创建一个新的 namespaceID, 以至于和 DataNode 上原有的不一致。  </p>
-<p><strong>解决方案：</strong><br>        1)    在 /tmp/hadoop-root/dfs/data 目录下残留的数据删掉，重新建（很麻烦，但看你了）<br>        2)    狠方法：bin/stop-all.sh        hadoop fs namenode -format        bin/start-all.sh<br>        3)    登上 DataNode，把位于{dfs.data.dir}/current/VERSION 中的 namespaceID 改为和 NameNode 相同即可(推荐)</p>
-<pre><code>[hadoop@dtydb6 current]$ cat VERSION
-#Fri Dec 14 09:37:22 CST 2019
-namespaceID=525507667
-storageID=DS-120876865-10.4.124.236-50010-1354772633249</code></pre><p><strong>3. 错误日志：</strong><br>        使用 CDH5，进入 hive 想创建表，报告以上的异常”Name node is in safe mode”，使用命令”hadoop dfsadmin -safemode leave ”让其离开安全模式，仍然不能解决。</p>
-<p><img src="/2020/04/01/Hadoop%E9%94%99%E8%AF%AF%E6%97%A5%E5%BF%97/01.jpg" alt></p>
-<p><strong>解决方案</strong></p>
-<p>使用 CDH5 发行版，在一般命令之前都要添加“sudo –u hdfs”（ROOT 级命令）</p>
-<pre><code># sudo –u hdfs hadoop dfsadmin –safemode leave</code></pre><p><strong>4. 关于 Warning: $HADOOP_HOME is deprecated.</strong><br>    hadoop 1.0.0 版本，安装完之后敲入 hadoop 命令时， 老是提示这个警告：Warning：$HADOOP_HOME is deprecated.</p>
-<p>经查 hadoop-1.0.0/bin/hadoop 脚本和“hadoop-config.sh”脚 本，发现脚本中对 HADOOP_HOME 的环境变量设置做了判断，笔者的环境根本不需要设置 HADOOP_HOME 环境变量。</p>
-<p><strong>解决方案：</strong></p>
-<p>1）编辑“/etc/profile”文件，去掉 HADOOP_HOME 的变量设定，重新输入 hadoop fs 命令，警告消失。<br>        2)    编辑“/etc/profile”文件，添加一个环境变量，之后警告消失：export HADOOP_HOME_WARN_SUPPRESS=1<br>        3)    编辑“hadoop-config.sh”文件，把下面的“if - fi”功能注释掉。</p>
-<p><img src="/2020/04/01/Hadoop%E9%94%99%E8%AF%AF%E6%97%A5%E5%BF%97/02.jpg" alt></p>
-<p><strong>5. 解决“no datanode to stop ”问题 </strong><br>        <strong> 原因：</strong>每次 namenode format 会重新创建一个 namenodeId，而 /tmp/dfs/data 下包含了上次 format 下的 id，namenode format 清空了 namenode 下的数据，但是没有清空 datanode 下的数据。导致启动时失败，所要做的就是每次 fotmat 前，清空 /tmp 一下的所有目录。</p>
-<p><strong>解决方案：</strong><br>        修改每个 Slave 的 namespaceID 使其与 Master 即 NN 的 namespaceID 一致。</p>
-<p><img src="/2020/04/01/Hadoop%E9%94%99%E8%AF%AF%E6%97%A5%E5%BF%97/03.jpg" alt></p>
-<p><strong>6.Slave 服务器中 datanode 启动后又自动关闭</strong><br>        查看日志发下如下错误：ERROR org.apache.hadoop.hdfs.server.datanode.DataNode: java.io.IOException:  Call to … failed on local exception: java.net .NoRouteToHostException: No route to host。</p>
-<p><strong>解决方案：</strong><br>    关闭防火墙：service iptables stop </p>
-<p><strong>7. 从本地往 hdfs 文件系统上传文件</strong><br>    出现如下错误：INFO hdfs.DFSClient: Exception in createBlockOutputStream java.io.IOException: Bad connect ack with firstBadLink。<br>INFO hdfs.DFSClient: Abandoning block blk_-1300529705803292651_37023。<br>WARN hdfs.DFSClient: DataStreamer Exception: java.io.IOException: Unable to create new lock。</p>
-<p><strong>解决方案：</strong><br>    1)    关闭防火墙：service iptables stop<br>    2)    禁用 selinux：编辑“/etc/selinux/config”文件，设置“SELINUX=disabled”。</p>
-<p><strong>8.hadoop 集群启动 start-all.sh 的时候，slave 总是无法启动 datanode，并会报错：… could only be replicated to 0 nodes, instead of 1 … 就是有节点的标识可能重复。也可能有其他原因，以下解决方法请依次尝试。</strong> </p>
-<p><strong>解决方法:</strong><br>        1). 删除所有节点 dfs.data.dir 和 dfs.tmp.dir 目录（默认为 tmp/dfs/data 和 tmp/dfs/tmp）下的数据文件；然后重新 hadoop namenode -format 格式化节点；然后启动。<br>        2). 如果是端口访问的问题，你应该确保所用的端口都打开，比如 hdfs://machine1:9000/、50030、50070 之类的。执行 #iptables -I INPUT -p tcp –dport 9000 -j ACCEPT 命令。如果还有报错：hdfs.DFSClient:  Exception in createBlockOutputStream java.net.ConnectException:  Connection refused；应该是 datanode 上的端口不能访问，到 datanode 上修改 iptables：#iptables -I INPUT -s machine1 -p tcp -j ACCEPT<br>        3). 还有可能是防火墙的限制集群间的互相通信。尝试关闭防火墙。/etc/init.d/iptables stop<br>        4). 最后还有可能磁盘空间不够了，请查看 df -al</p>
+        <p><strong>1.Jvm 重用</strong></p>
+<p>JVM 重用不是指同一 Job 的两个或两个以上的 Task 同时运行于同一 JVM 上，而是 N 个 Task 按顺序在同一个 Jvm 上运行，即省去了 Jvm 关闭和再重启的时间。N 值可以在 Hadoop 的 mapre-site.xml 文件。mapreduce.job.jvm.numtasks(默认 1)属性进行设置。也可在 hive 的执行设置：set mapred.job.reuse.jvm.num.tasks=10;(默认 1)。</p>
+<p>一个 TT 最多可以同时运行的 task 数目由 mapred-site.xml 中。mapreduce.tasktracker.map.tasks.maximum 和 mapreduce.tasktracker.reduce.tasks.maximum 设置。</p>
+<p>其他方法，如在 JobClient 端通过命令行：-D mapred.tasktracker.map.tasks.maximum=number 或者 conf.set(“mapred.tasktracker.map.tasks.maximum”,”number”)设置都是【无效的】。 </p>
+<p><strong>2. 哪些因素影响作业的运行效率?</strong></p>
+<p><strong>mapper 的数量：</strong>尽量将输入数据切分成数据块的整数倍。如有太多小文件，则考虑 CombineFileInputFormat </p>
+<p><strong>reducer 的数量：</strong>为了达到最高性能，集群中 reducer 数应该略小于 reducer 的任务槽数。</p>
+<p><strong>combiner 使用：</strong>充分使用合并函数减少 map 和 reduce 之间传递的数据量，combiner 在 map 后运行 。</p>
+<p><strong>中间值的压缩：</strong>对 map 输出值进行压缩减少到 reduce 前的传递量 conf.setCompressMapOutput(true)和 setMapOutputCompressorClass(GzipCodec.class)。</p>
+<p> <strong>自定义 Writable：</strong>如果使用自定义的 Writable 对象或自定义的 comparator，则必须确保已实现 RawComparator 。</p>
+<p><strong>调整 shuffle 参数：</strong>MapReduce 的 shuffle 过程可以对一些内存管理的参数进行调整，以弥补性能不足。</p>
+<p><strong>3. 避免 context.write(new Text(),new Text())</strong><br>提倡 key.set(); value.set(); output.collect(key,value);<br>前者会产生大量的 Text 对象，使用完后 Java 垃圾回收器会花费大量的时间去收集这些对象。</p>
+<p><strong>4. 使用 DistributedCache 加载文件 </strong><br> 比如配置文件，词典，共享文件，避免使用 static 变量。</p>
+<p><strong>5. 充分使用 Combiner + Parttitioner + Comparator</strong><br>        <strong>Combiner:</strong> 对 map 任务进行本地聚合。<br>    <strong>Parttitioner：</strong> 合适的 Parttitioner 避免 reduce 端负载不均。<br>        <strong>Comparator：</strong>二次排序 。</p>
+<p><strong>6.Uber 模式</strong><br>        是 Hadoop2.0 中实现的一种针对 MR 小作业的优化机制。即如果作业足够小，则所有 task 在一个 jvm（mrappmaster）中完成要比为每个 task 启动一个 container 更划算。下面是该机制的相关参数，这些参数均为客户端配置。</p>
+<p><strong>总开关</strong><br>•mapreduce.job.ubertask.enable 默认值：false。<br>•mapreduce.job.ubertask.maxmaps 最大 map 数，默认值：9。<br>•mapreduce.job.ubertask.maxreduces 最大 reduce 数，默认值：1 （社区 2.2.0 只支持 0 或 1 个 reduce）。<br>•mapreduce.job.ubertask.maxbytes 最大输入字节数，默认值：默认的 blocksize，即 64MB。</p>
+<p><strong>map 或 reduce 的内存需求不大于 appmaster 的内存需求</strong><br>•mapreduce.map.memory.mb (默认值：0) &lt;= yarn.app.mapreduce.am.resource.mb （默认值：1536）。<br>•mapreduce.reduce.memory.mb (默认值：0) &lt;= yarn.app.mapreduce.am.resource.mb （默认值：1536）。</p>
+<p><strong>map 或 reduce 的 CPU 需求不大于 appmaster 的 CPU 需求</strong><br>•mapreduce.map.cpu.vcores (默认值：1) &lt;= yarn.app.mapreduce.am.resource.cpu-vcores (默认值：1)。<br>•mapreduce.reduce.cpu.vcores (默认值：1) &lt;= yarn.app.mapreduce.am.resource.cpu-vcores (默认值：1)。<br>•mapreduce.job.map.class 不继承于 org.apache.hadoop.mapreduce.lib.chain.ChainMapper。<br>•mapreduce.job.reduce.class 不继承于 org.apache.hadoop.mapreduce.lib.chain.ChainReducer。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 15023696012@163.com </span>
@@ -435,12 +425,12 @@ storageID=DS-120876865-10.4.124.236-50010-1354772633249</code></pre><p><strong>3
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Hadoop 错误日志</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">998</span></p>
+    <p><span class="copy-title">文章标题:</span>Hadoop 性能调优</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">782</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="YYS_三师兄">YYS_三师兄</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-04-01, 11:52:41</p>
-    <p><span class="copy-title">最后更新:</span>2020-04-01, 12:07:13</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/01/Hadoop%E9%94%99%E8%AF%AF%E6%97%A5%E5%BF%97/" title="Hadoop 错误日志">http://yoursite.com/2020/04/01/Hadoop%E9%94%99%E8%AF%AF%E6%97%A5%E5%BF%97/</a>
+    <p><span class="copy-title">发布时间:</span>2020-04-01, 12:15:19</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-01, 12:23:30</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/01/Hadoop%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" title="Hadoop 性能调优">http://yoursite.com/2020/04/01/Hadoop%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
