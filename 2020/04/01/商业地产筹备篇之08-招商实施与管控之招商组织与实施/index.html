@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Hadoop 运维手记 | Hexo</title>
-  <meta name="keywords" content=" Hadoop ">
-  <meta name="description" content="Hadoop 运维手记 | Hexo">
+  <title>商业地产筹备篇之 08- 招商实施与管控之招商组织与实施 | Hexo</title>
+  <meta name="keywords" content=" 商业地产筹备 ">
+  <meta name="description" content="商业地产筹备篇之 08- 招商实施与管控之招商组织与实施 | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="​      ​       08- 招商实施与管控之招商组织与实施   高效的招商组织与实施, 既可保障按期满铺开业, 又可为每个商家创造良好的经营条件和经营环境, 形成项目规模优势和商圈效应, 充分发挥项目的功能和价值。为此, 须做好以下几项工作; 01  团队组建    招商工作顺利开展的关键是组建一支高效、专业的招商团队。招商工作需要在调研、定位、招商落位、计划管控、租金收益实现等环节落实">
 <meta property="og:type" content="article">
@@ -374,9 +374,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-Hadoop运维手记" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-商业地产筹备篇之08-招商实施与管控之招商组织与实施" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Hadoop 运维手记</h1>
+        <h1 class="article-title">商业地产筹备篇之 08- 招商实施与管控之招商组织与实施</h1>
     
     <div class="article-meta">
         
@@ -385,19 +385,19 @@
         
         <span class="tag">
             
-            <a class="color2">Hadoop</a>
+            <a class="color2">商业地产筹备</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-04-01 12:32:13'>2020-04-01 12:28</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-01 14:54:13'>2020-04-01 14:40</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:839</span>
+        <span>字数:2.5k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -432,37 +432,70 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>​       </p>
-<p><strong>1. 处理 hadoop 的 namenode 宕机</strong></p>
-<p>　　处理措施：进入 hadoop 的 bin 目录，重启 namenode 服务</p>
-<p>　　操作命令：cd path/to/hadoop/bin　　        ./hadoop-daemon.sh start namenode</p>
-<p><strong>2. 处理 hadoop 的 jobtacker 宕机</strong><br>　　处理措施：进入 hadoop 的 bin 目录，重启 jobtacker 服务<br>　　操作命令：cd path/to/hadoop/bin　　./hadoop-daemon.sh start jobtracker</p>
-<p><strong>3. 处理 hadoop 的 datanode 宕机</strong><br>　　处理措施：进入 hadoop 的 bin 目录，重启 datanode 服务<br>　　操作命令：cd path/to/hadoop/bin　　./hadoop-daemon.sh start datanode</p>
-<p><strong>4. 处理 hadoop 的 tasktracker 宕机</strong><br>　　处理措施：进入 hadoop 的 bin 目录，重启 tasktacker 服务<br>　　操作命令：cd path/to/hadoop/bin　　./hadoop-daemon.sh start tasktracker</p>
-<p><strong>5. 启动 hadoop 集群</strong><br>　　处理措施：进入 hadoop 的 bin 目录，执行 start-all.sh 脚本<br>　　操作命令：cd path/to/hadoop/bin　　./start-all.sh
-　　</p>
-<p><strong>注意事项：</strong><br>        namenode 在启动的时候首先进入安全模式，如果 datanode 丢失的 block 达到一定的比例（1- dfs.safemode.threshold.pct），则系统会一直处于安全模式状态即只读状态。         </p>
-<p>dfs.safemode.threshold.pct(缺省值 0.999f）表示 hdfs 启动的时候，如果 datanode 上报的 block 个数达到了 元数据记录的 block 个数的 0.999 倍才可以离开安全模式，否则一直是这种只读模式。如果设为 1 则 hdfs 永远是处于 safemode。</p>
-<p><strong>有两个方法离开这种安全模式 </strong><br>（1）修改 dfs.safemode.threshold.pct 为一个比较小的值，缺省是 0.999。<br>（2）hadoop dfsadmin -safemode leave 命令强制离开。<br> 用户可以通过 hadoop dfsadmin -safemode $value 来操作安全模式，参数 $value 的说明如下：<br>　　enter – 进入安全模式<br>　　leave – 强制 namenode 离开安全模式<br>　　get  – 返回安全模式是否开启的信息<br>　　wait – 等待，一直到安全模式结束。</p>
-<p><strong>6. 关闭 hadoop 集群</strong><br>　　处理措施：进入 hadoop 的 bin 目录，执行 stop-all.sh 脚本<br>　　操作命令：cd path/to/hadoop/bin　　./ stop-all.sh</p>
-<p><strong>7. 从 hadoop 移除机器</strong><br>　　处理措施：把需要移除的机器增加到 exclueds 文件中，强制刷新 datanode 列表，等待 decommission 状态正常后，即可停机下架，如有必要在 namenode 执行 balancer 操作。<br>　　操作命令：在 master 的 conf/hdfs-site.xml 中加入</p>
-<pre><code>&lt;property&gt;
-&lt;name&gt;dfs.hosts.exclude&lt;/name&gt;
-&lt;value&gt;excludes&lt;/value&gt;
-&lt;/property&gt;</code></pre><p>在 $hadoop_home 下创建 exclueds 文件 <br> 文件内容增加你想删除的节点的机器名，一行一个<br>/bin/hadoop dfsadmin -refreshnodes 命令刷新 datanode 例表<br>/bin/hadoop dfsadmin -report 查看结果</p>
-<pre><code>datanodes available: 1 (1 total, 0 dead)
-
-name: 192.168.200.118:50010
-decommission status : decommission in progress
-configured capacity: 211370565632 (196.85 gb)
-dfs used: 11459694592 (10.67 gb)
-non dfs used: 187135799296 (174.28 gb)
-dfs remaining: 12775071744(11.9 gb)
-dfs used%: 5.42%
-dfs remaining%: 6.04%
-last contact: wed feb 22 23:51:48 pst 2015</code></pre><p>在 decommission status : decommission in progress 变为 decommission status : decommission normal 前 mapreduce 会异常增加节点</p>
-<p><strong>8. 向 hadoop 添加机器</strong><br>　　处理措施：把新机器的增加到 conf/slaves 文件中，重启 datanode 和 jobtracker 进程，当新添加的机器向 namenode 发送心跳信息后，namenode 会自动感知新加入的机器，如果有必要可以做 balancer 操作。<br>　　操作命令：<br>1. 把新机器的增加到 conf/slaves 文件中（datanode 或者 tasktracker crash 则可跳过）<br>2. 在新机器上进入 hadoop 安装目录<br>　　$bin/hadoop-daemon.sh start datanode<br>　　$bin/hadoop-daemon.sh start tasktracker<br>3. 在 namenode 上<br>　　$bin/hadoop balancer</p>
-<p><strong>9. 杀死正在运行的 job</strong><br>　　操作命令：bin/hadoop job –kill {job-id}</p>
+        <p>​     </p>
+<p>​     <img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B08-%E6%8B%9B%E5%95%86%E5%AE%9E%E6%96%BD%E4%B8%8E%E7%AE%A1%E6%8E%A7%E4%B9%8B%E6%8B%9B%E5%95%86%E7%BB%84%E7%BB%87%E4%B8%8E%E5%AE%9E%E6%96%BD/01.png" alt></p>
+<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B08-%E6%8B%9B%E5%95%86%E5%AE%9E%E6%96%BD%E4%B8%8E%E7%AE%A1%E6%8E%A7%E4%B9%8B%E6%8B%9B%E5%95%86%E7%BB%84%E7%BB%87%E4%B8%8E%E5%AE%9E%E6%96%BD/02.gif" alt></p>
+<p><strong>08- 招商实施与管控之招商组织与实施 </strong></p>
+<p> 高效的招商组织与实施, 既可保障按期满铺开业, 又可为每个商家创造良好的经营条件和经营环境, 形成项目规模优势和商圈效应, 充分发挥项目的功能和价值。为此, 须做好以下几项工作;</p>
+<p><strong>01</strong></p>
+<p><strong> 团队组建 </strong></p>
+<hr>
+<p> 招商工作顺利开展的关键是组建一支高效、专业的招商团队。招商工作需要在调研、定位、招商落位、计划管控、租金收益实现等环节落实到人; 需要对专业招商人员, 进行筛选储备和培训、考核。</p>
+<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B08-%E6%8B%9B%E5%95%86%E5%AE%9E%E6%96%BD%E4%B8%8E%E7%AE%A1%E6%8E%A7%E4%B9%8B%E6%8B%9B%E5%95%86%E7%BB%84%E7%BB%87%E4%B8%8E%E5%AE%9E%E6%96%BD/03.jpg" alt></p>
+<p><strong>1. 人员储备 </strong></p>
+<p>   招商人员需要具备很强的专业知识和能力的同时, 还要具备沟通、统筹和协调等方面的能力。在项目开业前一年, 企业严格筛选具有不同专业能力的招商人员, 然后有针对性地进行分工; 同时, 前期还会储备一些招商人员, 保证新项目招商工作快速开展, 以避免过程中部分人员变化造成工作延期。</p>
+<p><strong>2. 培训考核 </strong></p>
+<p>   招商人员的培训, 主要针对项目定位、招商工作标准要求及过程中常见问题等方面进行培训。培训目的是为了帮助招商人员准确把握定位, 同时掌握各项工作标准, 快速地开展各项工作。在培训之后, 应对招商人员进行前期考核, 主要包括项目解读、工作要点、节点完成等内容。只有充分了解项目的实质, 才能转化成标准的招商要点, 确保招商成功。</p>
+<p><strong>02</strong></p>
+<p><strong> 资源储备 </strong></p>
+<p><strong>1. 储备商家资源, 做好准备 </strong></p>
+<p>  在项目定位阶段后期, 要根据项目定位、地方实际情况, 对商家开展市场接纳度、承租能力、经营方式、进驻意向等摸底工作。储备充足的商家资源, 以备后续整合使用。</p>
+<p> <img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B08-%E6%8B%9B%E5%95%86%E5%AE%9E%E6%96%BD%E4%B8%8E%E7%AE%A1%E6%8E%A7%E4%B9%8B%E6%8B%9B%E5%95%86%E7%BB%84%E7%BB%87%E4%B8%8E%E5%AE%9E%E6%96%BD/04.jpg" alt></p>
+<p><strong>2. 掌握商家结构, 制定策略 </strong></p>
+<p> 对储备的商家资源开展业态、结构、影响力的分析和梳理, 制定详细的招商实施步骤和策略。这样既能明确招商作战部署, 也能促进招商人员的工作开展。</p>
+<p><strong>03</strong></p>
+<p><strong> 合同管理 </strong></p>
+<hr>
+<p>  租赁合同, 是购物中心与商家建立租赁关系的依据, 是重要的法律文件。大量不同商家进驻购物中心, 需要签订租赁合同, 对租赁合同采用统一的标准化管理, 可以大大提高合同签署的效率。</p>
+<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B08-%E6%8B%9B%E5%95%86%E5%AE%9E%E6%96%BD%E4%B8%8E%E7%AE%A1%E6%8E%A7%E4%B9%8B%E6%8B%9B%E5%95%86%E7%BB%84%E7%BB%87%E4%B8%8E%E5%AE%9E%E6%96%BD/05.jpg" alt></p>
+<p><strong>(一) 租赁合同的分类 </strong></p>
+<p> 租赁合同主要分为三大类, 分别为格式合同、标准合同及非标准合同。</p>
+<p><strong>1. 格式合同 </strong></p>
+<p>  格式合同, 是根据企业自身特点而制订的制式合同文本, 可用于所有相同业态的商家进行签署, 一般采用统一印刷的形式, 这种合同具有签署效率高、适用性强、法律风险小的特点, 是租赁合同中占比最大的一类。</p>
+<p><strong>2. 标准合同 </strong></p>
+<p> 标准合同, 是指在格式合同的基础上, 按照商家的反馈意见, 经过洽谈, 形成达到管理标准要求的合同文本, 一般多用于战略合作商家。不同商家, 标准合同的内容也不尽相同。</p>
+<p><strong>3. 非标准合同 </strong></p>
+<p>  非标准合同, 是指在客户提供的合同文本基础上, 经过洽谈达成一致而形成的合同文本。一般多用于国际知名品牌。每一份非标准合同, 都经过了与品牌商家多次的谈判之后才形成。</p>
+<p>  三大类租赁合同, 是为了更好地结合招商实际, 对不同类型的商家使用不同的合同文本; 但在实际操作中, 更多要求商家使用格式合同, 在提高效率的同时便于管理。</p>
+<p><strong>(二) 租赁合同的编写与修订 </strong></p>
+<p> 租赁合同的编制需要多个部门协同配合。格式合同文本的编写, 需由商管、规划、财务、投资、法律事务等部门集中讨论, 提出相关意见。格式合同文本制订后的有效期通常是两年。</p>
+<p>  标准合同和非标准合同都是根据商家的反馈意见修订, 一到两年修订一次, 每次修订时, 都需与商家进行反复合同谈判, 并经开发、商管、规划、财务、投资、法律事务等部门审核后使用。</p>
+<p><strong>(三) 租赁合同的签署 </strong></p>
+<p>  合同作为双方必须遵守的法律文件, 合同签署必须有规范的流程, 以规避双方在后期经营中的法律风险。以万达为例, 分为主力店租赁合同签署和室内步行街租赁合同签署。</p>
+<p><strong>1. 主力店租赁合同签署 </strong></p>
+<p>   主力店租赁合同签署, 完全由总部招商部门负责。主力店的租赁合同, 在商务条件报审完后, 依据规划部门正式移交的租赁面积和双方确认的房产技术条件（甲乙双方施工界面划分 ), 与商家进行租赁合同条款的确认。合同文本确定后, 按照审批商务条件填写合同, 并逐级上报签批, 并按照法律部门确认的合同文本制作租赁合同供双方签署。</p>
+<p><strong>2. 室内步行街商铺租赁合同签署 </strong></p>
+<p>   步行街商铺租赁合同, 由各地方公司负责签署。根据已拟定完成的步行街格式文本、联发品牌的标准文本, 地方公司进行统一印刷、签署。如在招商过程中有商家对格式文本提出异议, 经谈判后可拟定租赁合同补充协议加以修订, 每份合同的补充协议, 必须上报至总部审核确认后, 方可签署使用。</p>
+<p><strong>04</strong></p>
+<p><strong> 计划管控 </strong></p>
+<hr>
+<p>   计划管控是商业项目前期招商中的一项重要管理方法。前期招商是一项系统工作, 从前期市调、数据分析、建立模型、业态布局、业态组合、品牌落位、招商实施到商家进驻等各个环节, 均需设定合理的工作周期和完成时限, 明确责任人和完成标准, 通过信息化手段, 进行计划管控, 确保招商过程各项工作的执行与落实。</p>
+<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B08-%E6%8B%9B%E5%95%86%E5%AE%9E%E6%96%BD%E4%B8%8E%E7%AE%A1%E6%8E%A7%E4%B9%8B%E6%8B%9B%E5%95%86%E7%BB%84%E7%BB%87%E4%B8%8E%E5%AE%9E%E6%96%BD/06.jpg" alt></p>
+<p><strong>(一) 筹备期计划管控 </strong></p>
+<p>   建立筹备期计划管控机制, 对工作计划的制订、执行、检查、调整采取全过程管理, 采用信息化的管控手段, 对前期招商工作关键计划节点进行管控, 提前预警进度异常状况, 确保真实信息传递到各管理岗位, 使各项工作可预测、可管控, 从而保证整个项目的进度和质量, 确保项目整体开发计划中各项筹备工作节点按时、按标准完成 (表 3-6 筹备计划模块表)。</p>
+<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B08-%E6%8B%9B%E5%95%86%E5%AE%9E%E6%96%BD%E4%B8%8E%E7%AE%A1%E6%8E%A7%E4%B9%8B%E6%8B%9B%E5%95%86%E7%BB%84%E7%BB%87%E4%B8%8E%E5%AE%9E%E6%96%BD/07.jpg" alt></p>
+<p> 将招商实施的重要工作节点进行分解, 每个节点启动、完成时间的设置既要满足规划设计的进度, 又要配合工程实施进度。</p>
+<p>  万达的做法是, 除了对筹备招商推进进行计划管控, 还要围绕商家从业态规划及铺位划分、品牌落位、意向签署、合同签署、平面布置与装修设计等环节来把控招商实施的计划。</p>
+<p> <strong>(1) 业态规划及铺位划分 </strong>: 即在项目开业前 230 天至开业前 200 天, 完成步行街品牌落位前的业态分布图、施工图技术条件确认及移交工作, 在这个阶段主要需确认餐饮、非餐饮平面位置及分割范围, 提供商铺隔墙砌筑图, 与商家确认的内容包括: 业态名称、业态性质、铺位划分、结构开洞、机电容量等施工图条件, 以满足施工图机电末端设计及容量负荷, 同时, 指导现场开始商家隔墙砌筑实施；</p>
+<p><strong>(2) 品牌落位 </strong>: 按已确定的业态规划, 完成品牌落位方案。根据商家对房产条件的要求和所需装修周期的不同, 分为餐饮业态、非餐饮业态的品牌落位, 分别要在项目开业前的 170 天和开业前 140 天完成;</p>
+<p><strong>(3) 意向签署 </strong>: 项目开业前 150 天, 完成所有合作意向签署和意向金的收取, 以保证项目业态规划的品质和目标品牌的最终落位;</p>
+<p><strong>(4) 合同签署 </strong>: 招商工作的成果落地, 工作周期一般为三个月, 须在项目开业前 90 天完成, 保证商家商铺设计及装修进场；</p>
+<p><strong>(5) 平面布置与装修设计 </strong>: 一般分装饰设计及施工图, 装修施工图须在项目开业前 90 天完成, 确保裝修周期及消防等相关验收的报审工作。</p>
+<p><strong>(二) 商家装修计划管控 </strong></p>
+<p>   不同业态商家, 装修周期不同, 一般餐饮业态在 60<del>90 天, 非餐饮业态一般在 30</del>45 天。因此设计装修进场管控按照业态不同, 分阶段、分步骤进行推进, 餐饮商家应在项目开业前 120 天开始进场装修, 非餐饮商家应在开业前 100 天开始进场装修, 才能保证消防及整体竣工验收。</p>
+<p>  商家装修计划管控设置“合同签署、进场装修、达到消防验收条件、装修完成、达到开业条件”5 个节点, 明确各节点的责任人和督办人, 有效推进商家装修 (表 3-7 筹备期装修管控表)。</p>
+<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B08-%E6%8B%9B%E5%95%86%E5%AE%9E%E6%96%BD%E4%B8%8E%E7%AE%A1%E6%8E%A7%E4%B9%8B%E6%8B%9B%E5%95%86%E7%BB%84%E7%BB%87%E4%B8%8E%E5%AE%9E%E6%96%BD/08.jpg" alt></p>
+<p><img src="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B08-%E6%8B%9B%E5%95%86%E5%AE%9E%E6%96%BD%E4%B8%8E%E7%AE%A1%E6%8E%A7%E4%B9%8B%E6%8B%9B%E5%95%86%E7%BB%84%E7%BB%87%E4%B8%8E%E5%AE%9E%E6%96%BD/09.png" alt></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 15023696012@163.com </span>
@@ -476,12 +509,12 @@ last contact: wed feb 22 23:51:48 pst 2015</code></pre><p>在 decommission statu
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Hadoop 运维手记</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">839</span></p>
+    <p><span class="copy-title">文章标题:</span>商业地产筹备篇之 08- 招商实施与管控之招商组织与实施</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">2.5k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="YYS_三师兄">YYS_三师兄</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-04-01, 12:28:49</p>
-    <p><span class="copy-title">最后更新:</span>2020-04-01, 12:32:13</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/01/Hadoop%E8%BF%90%E7%BB%B4%E6%89%8B%E8%AE%B0/" title="Hadoop 运维手记">http://yoursite.com/2020/04/01/Hadoop%E8%BF%90%E7%BB%B4%E6%89%8B%E8%AE%B0/</a>
+    <p><span class="copy-title">发布时间:</span>2020-04-01, 14:40:38</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-01, 14:54:13</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B08-%E6%8B%9B%E5%95%86%E5%AE%9E%E6%96%BD%E4%B8%8E%E7%AE%A1%E6%8E%A7%E4%B9%8B%E6%8B%9B%E5%95%86%E7%BB%84%E7%BB%87%E4%B8%8E%E5%AE%9E%E6%96%BD/" title="商业地产筹备篇之 08- 招商实施与管控之招商组织与实施">http://yoursite.com/2020/04/01/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E7%AD%B9%E5%A4%87%E7%AF%87%E4%B9%8B08-%E6%8B%9B%E5%95%86%E5%AE%9E%E6%96%BD%E4%B8%8E%E7%AE%A1%E6%8E%A7%E4%B9%8B%E6%8B%9B%E5%95%86%E7%BB%84%E7%BB%87%E4%B8%8E%E5%AE%9E%E6%96%BD/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
