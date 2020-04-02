@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Hadoop 运维手记 | Hexo</title>
-  <meta name="keywords" content=" Hadoop ">
-  <meta name="description" content="Hadoop 运维手记 | Hexo">
+  <title>商业地产开业篇之 09- 项目复盘评审之招商评审 | Hexo</title>
+  <meta name="keywords" content=" 商业地产开业 ">
+  <meta name="description" content="商业地产开业篇之 09- 项目复盘评审之招商评审 | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="近年来商业地产发展迅猛, 无论是建设规模还是空间形态。商业形态的不断进化, 也带动着商业地产行业的发展。针对商业广场开业后的评审, 既可将筹备阶段的经验进行归纳, 固化为标准, 也可发现存在的缺陷, 倒推到前端, 进行改善。 1. 招商评审 ​    通过招商评审,首先可以检查招商落地和规划的一致性。 ​    招商, 应该严格按项目定位制定的品牌落位执行, 但实际招商过程中, 因各种原因, 会发">
 <meta property="og:type" content="article">
@@ -575,9 +575,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-Hadoop运维手记" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-商业地产开业篇之09-项目复盘评审之招商评审" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Hadoop 运维手记</h1>
+        <h1 class="article-title">商业地产开业篇之 09- 项目复盘评审之招商评审</h1>
     
     <div class="article-meta">
         
@@ -585,26 +585,26 @@
         
         <span class="book">
             
-                <a  data-rel="大数据技术">大数据技术</a>
+                <a  data-rel="运营管理">运营管理</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color2">Hadoop</a>
+            <a class="color2">商业地产开业</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-04-02 13:42:55'>2020-04-01 12:28</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-03 01:11:23'>2020-04-03 01:03</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:839</span>
+        <span>字数:2k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -639,37 +639,52 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>​       </p>
-<p><strong>1. 处理 hadoop 的 namenode 宕机</strong></p>
-<p>　　处理措施：进入 hadoop 的 bin 目录，重启 namenode 服务</p>
-<p>　　操作命令：cd path/to/hadoop/bin　　        ./hadoop-daemon.sh start namenode</p>
-<p><strong>2. 处理 hadoop 的 jobtacker 宕机</strong><br>　　处理措施：进入 hadoop 的 bin 目录，重启 jobtacker 服务<br>　　操作命令：cd path/to/hadoop/bin　　./hadoop-daemon.sh start jobtracker</p>
-<p><strong>3. 处理 hadoop 的 datanode 宕机</strong><br>　　处理措施：进入 hadoop 的 bin 目录，重启 datanode 服务<br>　　操作命令：cd path/to/hadoop/bin　　./hadoop-daemon.sh start datanode</p>
-<p><strong>4. 处理 hadoop 的 tasktracker 宕机</strong><br>　　处理措施：进入 hadoop 的 bin 目录，重启 tasktacker 服务<br>　　操作命令：cd path/to/hadoop/bin　　./hadoop-daemon.sh start tasktracker</p>
-<p><strong>5. 启动 hadoop 集群</strong><br>　　处理措施：进入 hadoop 的 bin 目录，执行 start-all.sh 脚本<br>　　操作命令：cd path/to/hadoop/bin　　./start-all.sh
-　　</p>
-<p><strong>注意事项：</strong><br>        namenode 在启动的时候首先进入安全模式，如果 datanode 丢失的 block 达到一定的比例（1- dfs.safemode.threshold.pct），则系统会一直处于安全模式状态即只读状态。         </p>
-<p>dfs.safemode.threshold.pct(缺省值 0.999f）表示 hdfs 启动的时候，如果 datanode 上报的 block 个数达到了 元数据记录的 block 个数的 0.999 倍才可以离开安全模式，否则一直是这种只读模式。如果设为 1 则 hdfs 永远是处于 safemode。</p>
-<p><strong>有两个方法离开这种安全模式 </strong><br>（1）修改 dfs.safemode.threshold.pct 为一个比较小的值，缺省是 0.999。<br>（2）hadoop dfsadmin -safemode leave 命令强制离开。<br> 用户可以通过 hadoop dfsadmin -safemode $value 来操作安全模式，参数 $value 的说明如下：<br>　　enter – 进入安全模式<br>　　leave – 强制 namenode 离开安全模式<br>　　get  – 返回安全模式是否开启的信息<br>　　wait – 等待，一直到安全模式结束。</p>
-<p><strong>6. 关闭 hadoop 集群</strong><br>　　处理措施：进入 hadoop 的 bin 目录，执行 stop-all.sh 脚本<br>　　操作命令：cd path/to/hadoop/bin　　./ stop-all.sh</p>
-<p><strong>7. 从 hadoop 移除机器</strong><br>　　处理措施：把需要移除的机器增加到 exclueds 文件中，强制刷新 datanode 列表，等待 decommission 状态正常后，即可停机下架，如有必要在 namenode 执行 balancer 操作。<br>　　操作命令：在 master 的 conf/hdfs-site.xml 中加入</p>
-<pre><code>&lt;property&gt;
-&lt;name&gt;dfs.hosts.exclude&lt;/name&gt;
-&lt;value&gt;excludes&lt;/value&gt;
-&lt;/property&gt;</code></pre><p>在 $hadoop_home 下创建 exclueds 文件 <br> 文件内容增加你想删除的节点的机器名，一行一个<br>/bin/hadoop dfsadmin -refreshnodes 命令刷新 datanode 例表<br>/bin/hadoop dfsadmin -report 查看结果</p>
-<pre><code>datanodes available: 1 (1 total, 0 dead)
-
-name: 192.168.200.118:50010
-decommission status : decommission in progress
-configured capacity: 211370565632 (196.85 gb)
-dfs used: 11459694592 (10.67 gb)
-non dfs used: 187135799296 (174.28 gb)
-dfs remaining: 12775071744(11.9 gb)
-dfs used%: 5.42%
-dfs remaining%: 6.04%
-last contact: wed feb 22 23:51:48 pst 2015</code></pre><p>在 decommission status : decommission in progress 变为 decommission status : decommission normal 前 mapreduce 会异常增加节点</p>
-<p><strong>8. 向 hadoop 添加机器</strong><br>　　处理措施：把新机器的增加到 conf/slaves 文件中，重启 datanode 和 jobtracker 进程，当新添加的机器向 namenode 发送心跳信息后，namenode 会自动感知新加入的机器，如果有必要可以做 balancer 操作。<br>　　操作命令：<br>1. 把新机器的增加到 conf/slaves 文件中（datanode 或者 tasktracker crash 则可跳过）<br>2. 在新机器上进入 hadoop 安装目录<br>　　$bin/hadoop-daemon.sh start datanode<br>　　$bin/hadoop-daemon.sh start tasktracker<br>3. 在 namenode 上<br>　　$bin/hadoop balancer</p>
-<p><strong>9. 杀死正在运行的 job</strong><br>　　操作命令：bin/hadoop job –kill {job-id}</p>
+        <p>近年来商业地产发展迅猛, 无论是建设规模还是空间形态。商业形态的不断进化, 也带动着商业地产行业的发展。针对商业广场开业后的评审, 既可将筹备阶段的经验进行归纳, 固化为标准, 也可发现存在的缺陷, 倒推到前端, 进行改善。</p>
+<p><strong>1. 招商评审</strong></p>
+<p>​    通过招商评审,<strong>首先可以检查招商落地和规划的一致性。</strong></p>
+<p>​    招商, 应该严格按项目定位制定的品牌落位执行, 但实际招商过程中, 因各种原因, 会发生一些变化。</p>
+<p>招商完成后进行评审,<strong>首先是检查比对</strong>, 确定招商结果与原来定位有无出现偏差;</p>
+<p><strong>其次, 要解决后期营运的思路问题</strong>, 梳理岀因招商落位调整产生的差异, 进而明确今后招商调整的方向;</p>
+<p><strong>最后, 招商评审需要对今后的营运思路进行全面梳理和确立。</strong>通过招商评审, 还可以统一团队认识; 购物中心因业态繁多、设计复杂、工程量大、管理庞杂, 涉及多个业务部门, 需要部门间协同配合、形成合力, 在开业后进行的招商评审能促使团队检查发现问题, 共同拿出解决方案。</p>
+<p>此外, 还可以对招商的运行机制和运行节点中的问题提出改善建议, 对经验不断进行总结。</p>
+<p><strong>一、招商总结</strong></p>
+<p>招商总结是项目开业后对招商工作进行复盘, 检查招商的合规性, 同时总结经验教训, 主要内容分为:<strong>招商指标完成情况、品牌落位准确性、招商推广执行效果、商务谈判经验、筹备开业情况、商铺装修特色、安全管理以及后期经营目标策眳。</strong></p>
+<p><strong>案例：武汉汉街万达广场招商总结</strong></p>
+<p>武汉汉街万达广场招商启动前, 商业管理公司针对武汉以及整个湖北市场的商业发展状况及商业资源充分调硏摸底, 形成了该万达广场的商业定位—品质生活体验城市型购物中心、第一购物中心。</p>
+<p><strong>1. 招商完成情况</strong></p>
+<p>武汉万达广场成功引进 123 个国际品牌,86 个中外知名品牌。</p>
+<p>首次进入, 其中国际二线品牌有 Tommy Hilfiger, 国际快时尚 ZARA、H&amp;M、 ESPRIT 及 LACOSTE、ecco、 NAUTICA 等, 全面提升了武汉的商业档次。</p>
+<p><strong>2. 招商推广及谈判经验</strong></p>
+<p>在前期的招商推广中, 通过举办区域招商大会、万达中国行等活动, 呈现万达优势, 增强商家品牌方的信心。</p>
+<p><strong>在招商实施中, 对国际二线品牌的引进制定长期规划, 设置明确目标和责任人。</strong>在招商品质上, 招商中心和管理中心提前介入, 确保建筑硬件条件满足后期经营需求; 在合同谈判中, 严格遵循公司合冋签署要求, 并运用总部谈判优势, 加快合同签约速度, 提前完成计划节点</p>
+<p><strong>3. 问题及解决方案</strong></p>
+<p>在某些品牌签约节点上, 出现时间节点紧、工期短、项目施工条件不完备等问题, 武汉商业管理公司根据谈判节奏, 组织商管、项目和品牌公司的工程团队, 做好房产交接, 完成品牌的补充招商入驻。</p>
+<p><strong>4. 计划模块完成情况</strong></p>
+<p>武汉万达广场全部按时完成集团模块化时间节点。模块化对招商有较好的指导和督促作用。</p>
+<p><strong>5. 商家装修经验</strong></p>
+<p>商家装修前, 商业管理公司提前安排商家对房产技术条件进行现场对接, 协调项目公司予以落实; 梳理进退场相关流程, 确保流程的严谨性。在进入装修期后, 每天召开管控会, 确保各部门之间及与商家间的有效沟通, 做到责任明确, 合理分工。</p>
+<p>为了实现商铺装修最佳效果, 商业管理公司组织商家开展“万达中国行”活动, 赴各地万达广场实地考察学习; 在专场装修说明会中, 制定并向商家发放万达制定的可用于日常经营的指导文件; 发掘商家的设计潜力, 采取其品牌在全国乃至全球的最新形象; 注重设计细节和统一设计感, 做到商家装修一店一色。</p>
+<p><strong>6. 开业筹备经验</strong></p>
+<p>招商团队的组建是一切工作的基础, 必须保证团队成员的稳定性、凝聚力; 充分进行市场调硏和商家资源摸底, 在目前既有定位的基础上尝试进一步提升; 充分利用万达品牌号召力和武汉区域的品牌资源, 更好地提升招商品质和租金水平; 注重招商期向装修准备期的过渡工作。</p>
+<p><img src="/2020/04/03/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E5%BC%80%E4%B8%9A%E7%AF%87%E4%B9%8B09-%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98%E8%AF%84%E5%AE%A1%E4%B9%8B%E6%8B%9B%E5%95%86%E8%AF%84%E5%AE%A1/01.jpg" alt></p>
+<p><strong>二、第三方评审</strong></p>
+<p>由内部第三方对招商情况进行客观、合理的综合评审, 是另一种有效的检查手段。</p>
+<p><strong>(一)评审维度</strong></p>
+<p>招商评审内容包括:<strong>品牌引进、落位执行、店面装修形象 </strong> 三大维度。</p>
+<p><strong>品牌引进、落位执行部分是对实际落位并开业的品牌</strong>, 对照原始品牌落位图和《项目租赁决策文件》, 依据标准形成评分系数, 对形象考核评分, 并对每个品牌的引进对照落位执行情况, 对店面装修呈现效果进行评审。这些工作完成之后, 形成评审报告, 报告内容包括: 各部分评分过程及结果, 快时尚品牌和国际品牌的数量、级次、落位变更及变更合规性, 整体品牌组合、商家的店面装修形象的总体评价。</p>
+<p><strong>(二)评审方式</strong></p>
+<p>在招商评审的实际工作中, 业务人员还会进行自查, 给出招商初评, 并附具体评分过程, 做到工作既深入又细致。</p>
+<p><strong>牌落位的核查报告 </strong> 包括: 现有招商品牌总数, 各个业态分别实现的品牌, 出具一份实际品牌落位图。通过对比之前的计划, 来判断调整的比例。这部分内容也是招商评审中的自查核查内容。</p>
+<p><strong>在新项目开业前的进一步核实</strong>, 要细致到对每个品牌进行复核, 看品牌是否和落位计划中的品牌相符, 品牌要相同, 名称也要一致。</p>
+<p><strong>需要强调的是, 提供的品牌名称、品类、品牌级数必须与品牌库相对应, 否则, 该品牌将依照库外品牌执行评审标准。</strong></p>
+<p>对于店面装修评审, 详见（表 8-1 店铺装修评审）。</p>
+<p> <img src="/2020/04/03/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E5%BC%80%E4%B8%9A%E7%AF%87%E4%B9%8B09-%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98%E8%AF%84%E5%AE%A1%E4%B9%8B%E6%8B%9B%E5%95%86%E8%AF%84%E5%AE%A1/02.jpg" alt></p>
+<p><strong>(三)第三方评审作用</strong></p>
+<p><strong>招商评审的终极目的在于提升项目的总体品质</strong>。对新开业的项目进行全方位的品质评审, 要采用标杆项目对比法; 参照标杆, 才能保证项目品质。</p>
+<p>第三方评审的结果, 有以下 <strong> 三方面的用处</strong>:</p>
+<p>(1)为新开业的广场进行招商上的查漏补缺, 以便能在经营中做调整和优化;</p>
+<p>(2)给未来开业的广场树立各个维度的标杆, 以指导新项目的招商工作, 保证品质的提升; 与此同时, 也进一步对招商工作的各种流程和规范加以完善</p>
+<p>(3)奖罚分明, 招商品质评审形成打分, 其得分与考核直接挂钩。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 15023696012@163.com </span>
@@ -683,12 +698,12 @@ last contact: wed feb 22 23:51:48 pst 2015</code></pre><p>在 decommission statu
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Hadoop 运维手记</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">839</span></p>
+    <p><span class="copy-title">文章标题:</span>商业地产开业篇之 09- 项目复盘评审之招商评审</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">2k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="YYS_三师兄">YYS_三师兄</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-04-01, 12:28:49</p>
-    <p><span class="copy-title">最后更新:</span>2020-04-02, 13:42:55</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/01/Hadoop%E8%BF%90%E7%BB%B4%E6%89%8B%E8%AE%B0/" title="Hadoop 运维手记">http://yoursite.com/2020/04/01/Hadoop%E8%BF%90%E7%BB%B4%E6%89%8B%E8%AE%B0/</a>
+    <p><span class="copy-title">发布时间:</span>2020-04-03, 01:03:15</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-03, 01:11:23</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/03/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E5%BC%80%E4%B8%9A%E7%AF%87%E4%B9%8B09-%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98%E8%AF%84%E5%AE%A1%E4%B9%8B%E6%8B%9B%E5%95%86%E8%AF%84%E5%AE%A1/" title="商业地产开业篇之 09- 项目复盘评审之招商评审">http://yoursite.com/2020/04/03/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E5%BC%80%E4%B8%9A%E7%AF%87%E4%B9%8B09-%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98%E8%AF%84%E5%AE%A1%E4%B9%8B%E6%8B%9B%E5%95%86%E8%AF%84%E5%AE%A1/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
