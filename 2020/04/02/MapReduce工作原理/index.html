@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>领导力 -04- 卓越领导者的十个承诺 | Hexo</title>
-  <meta name="keywords" content=" 领导力 ">
-  <meta name="description" content="领导力 -04- 卓越领导者的十个承诺 | Hexo">
+  <title>MapReduce 工作原理 | Hexo</title>
+  <meta name="keywords" content=" Hadoop ">
+  <meta name="description" content="MapReduce 工作原理 | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="1.MapReduce 作业运行流程2.Map、Reduce 任务中 Shuffle 和排序的过程  一. MapReduce 框架组成  MapReduce 主要包括 JobClient、JobTracker、TaskTracker、HDFS 四个独立的部分。 1、JobClient 　　配置参数 Configuration，并打包成 jar 文件存储在 HDFS 上，将文件路径提交给 JobT">
 <meta property="og:type" content="article">
@@ -501,9 +501,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-领导力-04-卓越领导者的十个承诺" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-MapReduce工作原理" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">领导力 -04- 卓越领导者的十个承诺</h1>
+        <h1 class="article-title">MapReduce 工作原理</h1>
     
     <div class="article-meta">
         
@@ -511,26 +511,26 @@
         
         <span class="book">
             
-                <a  data-rel="EMBA">EMBA</a>
+                <a  data-rel="大数据技术">大数据技术</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color4">领导力</a>
+            <a class="color2">Hadoop</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-04-02 11:54:35'>2020-04-02 01:13</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-02 18:26:41'>2020-04-02 18:21</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:209</span>
+        <span>字数:2.5k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -549,7 +549,7 @@
     
     <div class="toc-ref">
     
-        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#逻辑角度分析作业运行顺序：输入分片 -input-split-、map 阶段、combiner 阶段、shuffle 阶段、reduce 阶段。"><span class="toc-text"> 逻辑角度分析作业运行顺序：输入分片(input split)、map 阶段、combiner 阶段、shuffle 阶段、reduce 阶段。</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -565,13 +565,65 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><img src="/2020/04/02/%E9%A2%86%E5%AF%BC%E5%8A%9B-04-%E5%8D%93%E8%B6%8A%E9%A2%86%E5%AF%BC%E8%80%85%E7%9A%84%E5%8D%81%E4%B8%AA%E6%89%BF%E8%AF%BA/01.png" alt></p>
-<p><img src="/2020/04/02/%E9%A2%86%E5%AF%BC%E5%8A%9B-04-%E5%8D%93%E8%B6%8A%E9%A2%86%E5%AF%BC%E8%80%85%E7%9A%84%E5%8D%81%E4%B8%AA%E6%89%BF%E8%AF%BA/02.gif" alt></p>
-<p><strong>04- 卓越领导者的十个承诺 </strong></p>
-<p>  根植在卓越领导的五种习惯行为中的基础行为，我们称为领导者的十个承诺（见表 1.1）。这十项承诺聚焦于领导者应采取的行动。也可以把它们当作一个模板，来解释、理解、领会和学习领导者是如何在组织中创造卓越成就的。我们会对每个承诺进行深入讨论。</p>
-<p>  在开始深入探讨卓越领导的五种习惯行为和十个承诺之前，我们将从追随者的角度思考一下领导力。人们对领导者的希望是什么？人们愿意追随某个人，是想从他那里得到什么呢？</p>
-<p>  表 1.1　卓越领导五种习惯行为与十个承诺 </p>
-<p><img src="/2020/04/02/%E9%A2%86%E5%AF%BC%E5%8A%9B-04-%E5%8D%93%E8%B6%8A%E9%A2%86%E5%AF%BC%E8%80%85%E7%9A%84%E5%8D%81%E4%B8%AA%E6%89%BF%E8%AF%BA/03.png" alt></p>
+        <p>1.MapReduce 作业运行流程<br>2.Map、Reduce 任务中 Shuffle 和排序的过程 </p>
+<p>一. MapReduce 框架组成</p>
+<p><img src="/2020/04/02/MapReduce%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/01.jpg" alt></p>
+<p>MapReduce 主要包括 JobClient、JobTracker、TaskTracker、HDFS 四个独立的部分。</p>
+<p>1、JobClient</p>
+<p>　　配置参数 Configuration，并打包成 jar 文件存储在 HDFS 上，将文件路径提交给 JobTracker 的 master 服务，然后由 master 创建每个 task 将它们分发到各个 TaskTracker 服务中去执行。</p>
+<p>2、JobTracker</p>
+<p>　　这是一个 master 服务，程序启动后，JobTracker 负责资源监控和作业调度。JobTracker 监控所有的 TaskTracker 和 job 的健康状况，一旦发生失败，即将之转移到其他节点上，同时 JobTracker 会跟踪任务的执行进度、资源使用量等信息，并将这些信息告诉任务调度器，而调度器会在资源出现空闲时，选择合适的任务使用这些资源。在 Hadoop 中，任务调度器是一个可插拔的模块，用户可以根据自己的需要设计相应的调度器。</p>
+<p>3、TaskTracker</p>
+<p>　　运行在多个节点上的 slaver 服务。TaskTracker 主动与 JobTracker 通信接受作业，并负责直接执行每个任务。TaskTracker 会周期性地通过 Heartbeat 将本节点上资源的使用情况和任务的运行进度汇报给 JobTracker，同时接收 JobTracker  发送过来的命令并执行相应的操作（如启动新任务、杀死任务等）。TaskTracker  使用“slot”等量划分本节点上的资源量。“slot”代表计算资源（CPU、内存等）。一个 Task 获取到一个 slot  后才有机会运行，而 Hadoop 调度器的作用就是将各个 TaskTracker 上的空闲 slot 分配给 Task 使用。slot 分为 Map  slot 和 Reduce slot 两种，分别供 MapTask 和 Reduce Task 使用。TaskTracker 通过 slot  数目（可配置参数）限定 Task 的并发度。</p>
+<p>　　Task 分为 Map Task 和 Reduce Task 两种，均由 TaskTracker 启动。HDFS 以 block 块存储数据，mapreduce 处理的最小数据单位为 split。split 如何划分又用户自由设置。如下为 split 和 block 之间的关系：</p>
+<p><img src="/2020/04/02/MapReduce%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/02.jpg" alt></p>
+<ol start="4">
+<li>HDFS</li>
+</ol>
+<p>保存数据和配置信息等。<br><strong>正文：</strong> </p>
+<p><strong>1.MapReduce 作业运行流程</strong></p>
+<p>下面贴出我用 visio2010 画出的流程示意图：</p>
+<p> <img src="/2020/04/02/MapReduce%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/03.jpg" alt></p>
+<p><strong>流程分析：</strong></p>
+<p>1. 在客户端启动一个作业。</p>
+<p>2. 向 JobTracker 请求一个 Job ID。</p>
+<p>3. 将运行作业所需要的资源文件复制到 HDFS 上，包括 MapReduce 程序打包的 JAR 文件、配置文件和客户端计算所得的输入划分信息。这些文件都存放在 JobTracker 专门为该作业创建的文件夹中。文件夹名为该作业的 Job  ID。JAR 文件默认会有 10 个副本（mapred.submit.replication 属性控制）；输入划分信息告诉了 JobTracker 应该为这个作业启动多少个 map 任务等信息。</p>
+<p>4.JobTracker 接收到作业后，将其放在一个作业队列里，等待作业调度器对其进行调度（这里是不是很像微机中的进程调度呢，呵呵），当作业调度器根据自己的调度算法调度到该作业时，会根据输入划分信息为每个划分创建一个 map 任务，并将 map 任务分配给 TaskTracker 执行。对于 map 和 reduce 任务，TaskTracker 根据主机核的数量和内存的大小有固定数量的 map 槽和 reduce 槽。这里需要强调的是：map 任务不是随随便便地分配给某个 TaskTracker 的，这里有个概念叫：数据本地化（Data-Local）。意思是：将 map 任务分配给含有该 map 处理的数据块的 TaskTracker 上，同时将程序 JAR 包复制到该 TaskTracker 上来运行，这叫“运算移动，数据不移动”。而分配 reduce 任务时并不考虑数据本地化。</p>
+<p>5.TaskTracker 每隔一段时间会给 JobTracker 发送一个心跳，告诉 JobTracker 它依然在运行，同时心跳中还携带着很多的信息，比如当前 map 任务完成的进度等信息。当 JobTracker 收到作业的最后一个任务完成信息时，便把该作业设置成“成功”。当 JobClient 查询状态时，它将得知任务已完成，便显示一条消息给用户。</p>
+<h2 id="逻辑角度分析作业运行顺序：输入分片 -input-split-、map 阶段、combiner 阶段、shuffle 阶段、reduce 阶段。"><a href="# 逻辑角度分析作业运行顺序：输入分片 -input-split-、map 阶段、combiner 阶段、shuffle 阶段、reduce 阶段。" class="headerlink" title="逻辑角度分析作业运行顺序：输入分片 (input split)、map 阶段、combiner 阶段、shuffle 阶段、reduce 阶段。"></a> 逻辑角度分析作业运行顺序：输入分片(input split)、map 阶段、combiner 阶段、shuffle 阶段、reduce 阶段。</h2><ol>
+<li><ol>
+<li>input split：在 map 计算之前，程序会根据输入文件计算 split，每个 input split 针对一个 map 任务。input split 存储的并非是数据本身，而是一个分片长度和一个记录数据的位置的数组。</li>
+<li>map 阶段：即执行 map 函数。</li>
+<li>combiner 阶段：这是一个可选择的函数，实质上是一种 reduce 操作。combiner 是 map 的后续操作，主要是在 map 计算出中间文件前做一个简单的合并重复 key 值的操作。</li>
+<li>shuffle 阶段：指从 map 输出开始，包括系统执行排序即传送 map 输出到 reduce 作为输入的过程。另外针对 map 输出的 key 进行排序又叫 sort 阶段。map 端 shuffle，简单来说就是利用 combiner 对数据进行预排序，利用内存缓冲区来完成。reduce 端的 shuffle 包括复制数据和归并数据，最终产生一个 reduce 输入文件。shuffle 过程有许多可调优的参数来提高 MapReduce 的性能，其总原则就是给 shuffle 过程尽量多的内存空间。</li>
+<li>reduce 阶段：即执行 reduce 函数并存到 hdfs 文件系统中。</li>
+</ol>
+</li>
+</ol>
+<p>　　2. 作业调度器：目前 hadoop 的作业调度器主要有三种：</p>
+<ol>
+<li><ol>
+<li>先进先出调度器：优点，算法简单，JobTracker 工作负担轻；缺点忽略不同作业的需求差异。</li>
+<li>容量调度器</li>
+<li>公平调度器</li>
+</ol>
+</li>
+</ol>
+<p>以上是在客户端、JobTracker、TaskTracker 的层次来分析 MapReduce 的工作原理的，下面我们再细致一点，从 map 任务和 reduce 任务的层次来分析分析吧。</p>
+<p><strong>2.Map、Reduce 任务中 Shuffle 和排序的过程</strong></p>
+<p>同样贴出我在 visio 中画出的流程示意图：</p>
+<p><img src="/2020/04/02/MapReduce%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/04.jpg" alt></p>
+<p><strong>流程分析：</strong> </p>
+<p><strong>Map 端：</strong> </p>
+<p>1．每个输入分片会让一个 map 任务来处理，默认情况下，以 HDFS 的一个块的大小（默认为 64M）为一个分片，当然我们也可以设置块的大小。map 输出的结果会暂且放在一个环形内存缓冲区中（该缓冲区的大小默认为 100M，由 io.sort.mb 属性控制），当该缓冲区快要溢出时（默认为缓冲区大小的 80%，由 io.sort.spill.percent 属性控制），会在本地文件系统中创建一个溢出文件，将该缓冲区中的数据写入这个文件。</p>
+<p>2．在写入磁盘之前，线程首先根据 reduce 任务的数目将数据划分为相同数目的分区，也就是一个 reduce 任务对应一个分区的数据。这样做是为了避免有些 reduce 任务分配到大量数据，而有些 reduce 任务却分到很少数据，甚至没有分到数据的尴尬局面。其实分区就是对数据进行 hash 的过程。然后对每个分区中的数据进行排序，如果此时设置了 Combiner，将排序后的结果进行 Combia 操作，这样做的目的是让尽可能少的数据写入到磁盘。</p>
+<p>3．当 map 任务输出最后一个记录时，可能会有很多的溢出文件，这时需要将这些文件合并。合并的过程中会不断地进行排序和 combia 操作，目的有两个：1. 尽量减少每次写入磁盘的数据量；2. 尽量减少下一复制阶段网络传输的数据量。最后合并成了一个已分区且已排序的文件。为了减少网络传输的数据量，这里可以将数据压缩，只要将 mapred.compress.map.out 设置为 true 就可以了。</p>
+<p>4．将分区中的数据拷贝给相对应的 reduce 任务。有人可能会问：分区中的数据怎么知道它对应的 reduce 是哪个呢？其实 map 任务一直和其父 TaskTracker 保持联系，而 TaskTracker 又一直和 JobTracker 保持心跳。所以 JobTracker 中保存了整个集群中的宏观信息。只要 reduce 任务向 JobTracker 获取对应的 map 输出位置就 ok 了哦。</p>
+<p>到这里，map 端就分析完了。那到底什么是 Shuffle 呢？Shuffle 的中文意思是“洗牌”，如果我们这样看：一个 map 产生的数据，结果通过 hash 过程分区却分配给了不同的 reduce 任务，是不是一个对数据洗牌的过程呢？呵呵。</p>
+<p><strong>Reduce 端：</strong> </p>
+<p>1．Reduce 会接收到不同 map 任务传来的数据，并且每个 map 传来的数据都是有序的。如果 reduce 端接受的数据量相当小，则直接存储在内存中（缓冲区大小由 mapred.job.shuffle.input.buffer.percent 属性控制，表示用作此用途的堆空间的百分比），如果数据量超过了该缓冲区大小的一定比例（由 mapred.job.shuffle.merge.percent 决定），则对数据合并后溢写到磁盘中。</p>
+<p>2．随着溢写文件的增多，后台线程会将它们合并成一个更大的有序的文件，这样做是为了给后面的合并节省时间。其实不管在 map 端还是 reduce 端，MapReduce 都是反复地执行排序，合并操作，现在终于明白了有些人为什么会说：排序是 hadoop 的灵魂。</p>
+<p>3．合并的过程中会产生许多的中间文件（写入磁盘了），但 MapReduce 会让写入磁盘的数据尽可能地少，并且最后一次合并的结果并没有写入磁盘，而是直接输入到 reduce 函数。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 15023696012@163.com </span>
@@ -585,12 +637,12 @@
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>领导力 -04- 卓越领导者的十个承诺</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">209</span></p>
+    <p><span class="copy-title">文章标题:</span>MapReduce 工作原理</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">2.5k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="YYS_三师兄">YYS_三师兄</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-04-02, 01:13:17</p>
-    <p><span class="copy-title">最后更新:</span>2020-04-02, 11:54:35</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/02/%E9%A2%86%E5%AF%BC%E5%8A%9B-04-%E5%8D%93%E8%B6%8A%E9%A2%86%E5%AF%BC%E8%80%85%E7%9A%84%E5%8D%81%E4%B8%AA%E6%89%BF%E8%AF%BA/" title="领导力 -04- 卓越领导者的十个承诺">http://yoursite.com/2020/04/02/%E9%A2%86%E5%AF%BC%E5%8A%9B-04-%E5%8D%93%E8%B6%8A%E9%A2%86%E5%AF%BC%E8%80%85%E7%9A%84%E5%8D%81%E4%B8%AA%E6%89%BF%E8%AF%BA/</a>
+    <p><span class="copy-title">发布时间:</span>2020-04-02, 18:21:37</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-02, 18:26:41</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/02/MapReduce%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="MapReduce 工作原理">http://yoursite.com/2020/04/02/MapReduce%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
