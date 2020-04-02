@@ -689,7 +689,7 @@ storageID=DS-120876865-10.4.124.236-50010-1354772633249</code></pre><p><strong>3
 <p><strong>解决方法:</strong><br>        1). 删除所有节点 dfs.data.dir 和 dfs.tmp.dir 目录（默认为 tmp/dfs/data 和 tmp/dfs/tmp）下的数据文件；然后重新 hadoop namenode -format 格式化节点；然后启动。<br>        2). 如果是端口访问的问题，你应该确保所用的端口都打开，比如 hdfs://machine1:9000/、50030、50070 之类的。执行 #iptables -I INPUT -p tcp –dport 9000 -j ACCEPT 命令。如果还有报错：hdfs.DFSClient:  Exception in createBlockOutputStream java.net.ConnectException:  Connection refused；应该是 datanode 上的端口不能访问，到 datanode 上修改 iptables：#iptables -I INPUT -s machine1 -p tcp -j ACCEPT<br>        3). 还有可能是防火墙的限制集群间的互相通信。尝试关闭防火墙。/etc/init.d/iptables stop<br>        4). 最后还有可能磁盘空间不够了，请查看 df -al</p>
 
       
-       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 15023696012@163.com </span>
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 15023696012@163.com或微信：yitianyu271 </span>
     </div>
 </article>
 
