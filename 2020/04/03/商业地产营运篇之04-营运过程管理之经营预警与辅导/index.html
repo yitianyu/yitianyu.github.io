@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>HDFS 架构 | Hexo</title>
-  <meta name="keywords" content=" Hadoop ">
-  <meta name="description" content="HDFS 架构 | Hexo">
+  <title>商业地产营运篇之 04- 营运过程管理之经营预警与辅导 | Hexo</title>
+  <meta name="keywords" content=" 商业地产营运 ">
+  <meta name="description" content="商业地产营运篇之 04- 营运过程管理之经营预警与辅导 | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="购物中心的经营管理是按流程进行的, 从经营分析开始, 确定购物中心的预警事项, 通过对预警事项的分析, 最终确定购物中心的经营辅导策略、招商调整策略以及市场推广策略等。 一、经营预警 经营预警是根据购物中心经营的实际情况与结果是否满足管理目标的预期要求, 来确定购物中心或商家运行是否处于正常状态, 并做出经营对策的管理活动。它  通过对购物中心或商家的运行进行监控、预测与警告, 采用合适的调控方法">
 <meta property="og:type" content="article">
@@ -621,9 +621,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-HDFS架构" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-商业地产营运篇之04-营运过程管理之经营预警与辅导" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">HDFS 架构</h1>
+        <h1 class="article-title">商业地产营运篇之 04- 营运过程管理之经营预警与辅导</h1>
     
     <div class="article-meta">
         
@@ -631,26 +631,26 @@
         
         <span class="book">
             
-                <a  data-rel="大数据技术">大数据技术</a>
+                <a  data-rel="运营管理">运营管理</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color2">Hadoop</a>
+            <a class="color2">商业地产营运</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-04-02 15:53:38'>2020-04-02 15:38</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-03 13:10:46'>2020-04-03 12:55</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:1.5k</span>
+        <span>字数:1.9k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -685,75 +685,37 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>​          </p>
-<p><strong>1.HDFS 的 Block 块概念</strong></p>
-<p>HDFS 默认的 Block 块大小为 128 MB。<strong>为何 HDFS 中的一个块那么大？</strong></p>
-<p>HDFS 的 block 块比磁盘的块大，目的是为了减小寻址开销。通过让一个块足够大，从磁盘转移数据的时间能够远远大于定位这个块开始端的时间。因此，传送一个由多个块组成的文件的时间就取决于磁盘传输送率。</p>
-<pre><code>//HDFS 中 fsck 指令会显示块的信息
-% hadoop fsck / -files -blocks</code></pre><p><strong>2.NN 主要功能</strong></p>
-<p>　1). NN 提供名称查询服务，它是一个 Jetty 服务器.</p>
-<p>　2).NN 维护着两张关键性的表：<strong>①. filename -&gt; blocksequence (namespace) ②. block -&gt; machinelist (“inodes”).</strong> 第①张表保存在磁盘，非常珍贵。第②张表每次 NN 启动时都会在内存中重建。</p>
-<p>　3). 表①维护着整个 HDFS 系统的元数据信息。NN 不需要从磁盘读取 metadata，所有数据都在内存中，硬盘上的元数据文件 fsimage 和 edits 只是序列化的结果，只有每次 NN 启动的时候才会读取。</p>
-<p>　4). 表②记录着每个文件的数据块存储的 DN，但它并不永久保存块的位置信息，因为这些信息由 DN 通过每 6 小时发送一次 <strong>Block-Report</strong> 时重建.</p>
-<p><strong>3.NN 目录结构</strong></p>
-<p>NN 被格式化之后（区别于 DN：使用前不用格式化），将产生如下所示的目录结构： </p>
-<p><img src="/2020/04/02/HDFS%E6%9E%B6%E6%9E%84/01.jpg" alt></p>
-<p>　1). 实际生产环境中为了安全机制，将 dfs.name.dir 配置成以逗号隔开的一组目录，各个目录存储的内容相同。这个机制使得系统具备一定的还原能力，特别是当其中一个目录位于 NFS 之上时（推荐配置）.</p>
-<p>　2). fsimage 文件其实是 Hadoop 文件系统元数据的一个永久性的检查点，其中包含 Hadoop 文件系统中的所有目录和文件 idnode 的序列化信息.</p>
-<p>　3). edits 文件存放的是 Hadoop 文件系统的所有更新操作的路径，文件系统客户端执行的所以写操作首先会被记录到 edits 文件中.</p>
-<p><strong>4.SNN 主要功能</strong></p>
-<p>每个集群都有一个，SNN 只有一个职责：合并 NN 中的 edits 到 fsimage 中，减少 NN 启动时间。</p>
-<p><img src="/2020/04/02/HDFS%E6%9E%B6%E6%9E%84/02.jpg" alt></p>
-<ol>
-<li>SNN 请求 NN 停止使用 edits 文件，暂时将新的写操作记录到一个新的 edits.new 文件中。</li>
-<li>SNN 通过网络从 NN 拷贝 fsimage 和 edits 文件。</li>
-<li>SNN 首先将 fsimage 加载到内存，然后逐一执行 edits 中的操作，最后将内存中最新的元数据信息写到本地磁盘，生成新的 fsimage 文件（该 fsimage 就是 SNN Checkpoint 生成的元数据文件）。</li>
-<li>SNN 通过网络将新的 fsimage 拷贝到 NN。</li>
-<li>NN 用新的 fsimage 代替旧的 fsimage；并用步骤 ① 所产生的 edits（不一定为空）代替旧的 edits 文件。</li>
-<li>NN 拥有最新的 fsimage 文件和一个更小的 edits 文件。SNN 上也保存着最新的 fsimage 文件。</li>
-</ol>
-<p>除此之外，当 NN 处于安全模式时，管理员也可以调用以下命令来手动执行合并两文件：</p>
-<pre><code>// 必须是在安全模式
-hdfs dfsadmin -safemode enter
-hadoop dfsadmin –saveNamespace</code></pre><p>从配置文件 hdfs-default.xml 中，可以看出 SNN 定期 <strong>3600s=1h 触发一次 CheckPoint。</strong>不仅可以保证各个 CheckPoint 阶段的元数据的可靠性，同时，进行 fsimage 与 edits 的合并，可以有效限制 edits 的大小，防止其无限制增长。</p>
-<p><img src="/2020/04/02/HDFS%E6%9E%B6%E6%9E%84/03.jpg" alt></p>
-<p><strong>5.DN 节点(向 NN 发送 heartbeat 和 DirectoryScan)</strong></p>
-<ol>
-<li><p>DN 响应来自 HDFS 客户端的读写请求，还响应来自 NN 的创建、删除和复制块的命令。</p>
-</li>
-<li><p>DN 启动后，首先向 NN 注册，然后周期性 (21600s = 6 小时) 的向 NN 发送目录扫描信息(DirectoryScan)。</p>
-</li>
-<li><p>向 NN 定期 (3 秒一次) 发送心跳 (heartbeat) 保持与其联系，如果 NN10 分钟没有收到 DN 的心跳，则认为其已经 lost，并将其上的 Blcok 复制到其他 DN 节点。 </p>
-</li>
-</ol>
-<p>   <img src="/2020/04/02/HDFS%E6%9E%B6%E6%9E%84/04.jpg" alt></p>
-<p><strong>6.DN 目录结构</strong></p>
-<p>DN 存储目录启动时自动创建，不需要额外格式化<strong>【区别于 DN】</strong>。通过参数 dfs.datanode.data.dir 配置。 </p>
-<p><img src="/2020/04/02/HDFS%E6%9E%B6%E6%9E%84/05.jpg" alt></p>
-<ul>
-<li><strong>以 blk_ 开始的块文件</strong>：节点所存储的数据本身.</li>
-<li><strong>以.meta 结尾的元数据文件</strong>：包含数据块的长度、Blcok 块数据的校验和以及时间戳.</li>
-<li>都是以 <strong> 二进制形式 </strong> 保存的，可以使用读取二进制的命令 od 验证.</li>
-</ul>
-<p>Block 副本放置策略：</p>
-<ol>
-<li>副本 1：上传 Client 的节点上.</li>
-<li>副本 2：不同机架中的节点上.</li>
-<li>副本 3：与第二个副本同一机架的另一个节点上.</li>
-</ol>
-<p><strong>7. 文件的读取</strong></p>
-<p><img src="/2020/04/02/HDFS%E6%9E%B6%E6%9E%84/06.jpg" alt></p>
-<p>1)  使用 HDFS 提供的客户端 Client 向远程的 NN 发起 RPC 请求.</p>
-<p>2)  NN 会视情况返回请求文件的部分或者全部 Blcok 列表，对于每个 Blcok，NN 都会返回所有存储该 Blcok 副本的 DN 地址.</p>
-<p>3)  客户端 Client 会选择距离最近的 DN 来读取 Blcok；如果客户端本身就是 DN，将直接从本地读取数据.</p>
-<p>4)  读取完当前 Blcok 的数据后，关闭与当前 DN 的连接，并寻找读取下一个 Blcok 块的最佳 DN.</p>
-<p>5)  当读完列表中的 Blcok 后，如若文件读取还没有结束，客户端会继续向 NN 获取下一批 Blcok 块的列表.</p>
-<p>6)  每读取完一个 Blcok 都会进行 CheckSum 验证，如果 CheckSum 验证出现错误，客户端会通知 NN，然后再从列表中选择下一个拥有该 Blcok 副本的 DN 继续读取.</p>
-<p><strong>8. 文件的写入</strong></p>
-<p><img src="/2020/04/02/HDFS%E6%9E%B6%E6%9E%84/07.jpg" alt></p>
-<p>1)   NameNode 发起文件写入的请求</p>
-<p>2)  NameNode 根据文件大小和文件块配置情况，返回给 Client 它所管理部分 DataNode 的信息</p>
-<p>3)  Client 将文件划分为多个 Block，根据 DataNode 的地址信息，按顺序写入到每一个 DataNode 块中</p>
+        <p>购物中心的经营管理是按流程进行的, 从经营分析开始, 确定购物中心的预警事项, 通过对预警事项的分析, 最终确定购物中心的经营辅导策略、招商调整策略以及市场推广策略等。</p>
+<p><strong>一、经营预警</strong></p>
+<p>经营预警是根据购物中心经营的实际情况与结果是否满足管理目标的预期要求, 来确定购物中心或商家运行是否处于正常状态, 并做出经营对策的管理活动。它 <strong> 通过对购物中心或商家的运行进行监控、预测与警告, 采用合适的调控方法使之恢复正常状态, 将可能的损失减少到最低程度。</strong></p>
+<p><strong>(一)预警值的设定</strong></p>
+<p><strong>1. 经营预警的分类</strong></p>
+<p>根据购物中心管理侧重点的不同, 经营预警可分为三类, 即 <strong> 经营异常预警、经营能力预警、管理异常预警。</strong></p>
+<p><strong>经营异常预警 </strong> 是对购物中心的异常波动的预警。经营预警的监测指标一般为绝对量指标, 如客流量、车辆量、销售额等, 经营异常预警必须持续性地监测, 一旦出现预警立即响应。</p>
+<p><strong>经营能力的预警 </strong> 主要是针对购物中心经营水平的预警, 通过对销售坪效、租金坪效、租售比等指标的监测, 确定购物中心是否经营困难。</p>
+<p><strong>管理异常预警 </strong> 是指对购物中心的管理因素进行监测预警, 如对商家的人员流动率、货品更新频率、营销企划配合度等内容进行监测预警。管理异常预警并非通过数据的采集与统计获取, 它需要购物中心管理者平时多与商家沟通、细心观察获得预警信息。管理异常预警的岀现往往早于经营异常预警及经营能力预警。</p>
+<p><strong>2. 预警值的设定</strong></p>
+<p>若要获取准确的预警信息, 就必须 <strong> 设置正确的预警值</strong>。预警值设定的目的是及早发现购物中心的异常波动, 通过纠错或整改使购物中心经营重新沿着正常轨道发展, 因此所设置的预警值应该是低于平时状态的最大容忍限度的值。</p>
+<p><strong>1)经营异常预警值的设定</strong></p>
+<p><strong>客流量、车流量、销售额等反映经营异常的指标预警值的设定, 与购物中心的具体状况密切相关。</strong>一般情况下新开业购物中心的经营目标是可持续发展, 所以此时的预警值设置较低, 例如新开业的万达广场客流量预警值一般为日均 4 万人次, 销售额为日均 150 万元。已开业的购物中心, 随着开业年限的增多, 预警值逐年提高; 一个购物中心的培育期一般是三年, 三年内购物中心波动性较大, 增长率也较高; 三年后购物中心进入成熟稳定发展时期, 此时增长率保持较低的稳定水平。预警值一般根据上一年度日均数据再增长的一定比例来确定(表 10-1 万达广场客流与销售预警值的设定)。</p>
+<p> <img src="/2020/04/03/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E8%90%A5%E8%BF%90%E7%AF%87%E4%B9%8B04-%E8%90%A5%E8%BF%90%E8%BF%87%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8B%E7%BB%8F%E8%90%A5%E9%A2%84%E8%AD%A6%E4%B8%8E%E8%BE%85%E5%AF%BC/01.jpg" alt></p>
+<p><strong>2)经营能力预警值的设定</strong></p>
+<p>经营能力指标预警值设定的主要依据是行业经验值, 同一行业不同商家的成本利润占比基本是一致的, 同时经营能力预警值的高低与购物中心的经营水平成正比。通常情况下, 无论哪一业态、业种, 月均销售坪效超过 2000 元 / 平方米的品牌即可判断处于经营优异的状态; 而对于零售业态月销售坪效低于 1000 元 / 平方米的品牌, 撤铺风险较高。租售比的最佳比值是 15%, 而超过 30%, 品牌撤铺风险较高(图 10-11 某万达广场租售比预警图)。</p>
+<p><img src="/2020/04/03/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E8%90%A5%E8%BF%90%E7%AF%87%E4%B9%8B04-%E8%90%A5%E8%BF%90%E8%BF%87%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8B%E7%BB%8F%E8%90%A5%E9%A2%84%E8%AD%A6%E4%B8%8E%E8%BE%85%E5%AF%BC/02.jpg" alt></p>
+<p>![图 10-11 某万达广场租售比预警图](E:\2015 商业地产运营管理 \ 商业地产营运管理 \ 图 10-11 某万达广场租售比预警图.png)</p>
+<p><strong>3)管理异常预警值的设定</strong></p>
+<p>由于管理异常预警主要来自于个人经验的判断, 因此无法设置具体的预警值, 购物中心管理者可以根据商家与日常表现的差别判断是否预警。例如换季时期货品未及时上新可能说明品牌总部管理出现问题, 如接到商家店员拖欠工资的投诉则说明商家盈利能力差或诚信度不高等。</p>
+<p><strong>(二)预警管控机制的建立</strong></p>
+<p>购物中心管理者必须重视对重点预警的管控, 建立预警管控机制(表 10-2 万达广场经营预警管控)。</p>
+<p>根据经营预警的严重程度可分为一般预警与重点预警两个类别。经营指标突发预警, 暂列为一般预警, 需要购物中心管理者持续关注, 直到预警消除; 如经营指标持续预警达到一定天数, 那么就应该认定为非偶然因素引起, 列入重点预警进行管控。</p>
+<p>万达广场预警管控机制包括预警值的设定、预警发布、现场办公、制定经营整改方案、整改方案改进评审五个步骤(表 10-2 万达广场经营预警管控)。</p>
+<p><img src="/2020/04/03/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E8%90%A5%E8%BF%90%E7%AF%87%E4%B9%8B04-%E8%90%A5%E8%BF%90%E8%BF%87%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8B%E7%BB%8F%E8%90%A5%E9%A2%84%E8%AD%A6%E4%B8%8E%E8%BE%85%E5%AF%BC/03.jpg" alt></p>
+<p>例如某广场若发生客流或销售连续 5 天低于预警值、或累计 7 天低于预警值的情况就将列入重点预警, 重点预警发出后, 广场总经理及各相关部门要立即行动, 由广场总经理亲自主持整改会议, 分析重点预警的形成原因、确定整改方案, 形成会议纪要上报商业管理公司总部备档待查, 商业管理公司总部将于整改方案完成后对改进情况进行评审考核。</p>
+<p><strong>二、经营辅导</strong></p>
+<p>购物中心在确定预警商家后, 不能简单得出招商调整的结论, 还需要对预警商家的经营行为进行经营监控和分析, 确定是否进入经营辅导环节, 只有通过经营监控发现问题严重时, 才能将问题商家列入招商调整计划中。</p>
+<p><strong>购物中心商家出现问题 </strong> 的表现形式是一致的, 即销售下滑, 租金难以承受, 但问题商家的预警原因各不相同。购物中心应在条件许可的前提下, 通过运用各种方式和手段, 调动并结合公司及商家各方资源, 改善商家经营方式, 引导、规范、改进商家的内在管理和销售行为, 从而提高商家销售业绩。</p>
+<p><strong>购物中心可以通过一对一帮扶、商家座谈会、培训指导等方式对商家进行经营辅导。</strong>经营辅导策略可以分为销售増长策略、商品优化策略、定位调整策略、人员优化策略、营销加强策略等, 根据对商家的分析硏究采取对应的辅导策略(表 10-3 万达广场经营辅导安排表)。经营辅导的期限不宜过长, 一般以半年为一个周期, 半年结束后重新对商家进行评估, 确定是否进行招商调整。</p>
+<p><img src="/2020/04/03/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E8%90%A5%E8%BF%90%E7%AF%87%E4%B9%8B04-%E8%90%A5%E8%BF%90%E8%BF%87%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8B%E7%BB%8F%E8%90%A5%E9%A2%84%E8%AD%A6%E4%B8%8E%E8%BE%85%E5%AF%BC/04.jpg" alt></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 15023696012@163.com或微信：yitianyu271 </span>
@@ -767,12 +729,12 @@ hadoop dfsadmin –saveNamespace</code></pre><p>从配置文件 hdfs-default.xml
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>HDFS 架构</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">1.5k</span></p>
+    <p><span class="copy-title">文章标题:</span>商业地产营运篇之 04- 营运过程管理之经营预警与辅导</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">1.9k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="YYS_三师兄">YYS_三师兄</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-04-02, 15:38:40</p>
-    <p><span class="copy-title">最后更新:</span>2020-04-02, 15:53:38</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/02/HDFS%E6%9E%B6%E6%9E%84/" title="HDFS 架构">http://yoursite.com/2020/04/02/HDFS%E6%9E%B6%E6%9E%84/</a>
+    <p><span class="copy-title">发布时间:</span>2020-04-03, 12:55:55</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-03, 13:10:46</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/03/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E8%90%A5%E8%BF%90%E7%AF%87%E4%B9%8B04-%E8%90%A5%E8%BF%90%E8%BF%87%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8B%E7%BB%8F%E8%90%A5%E9%A2%84%E8%AD%A6%E4%B8%8E%E8%BE%85%E5%AF%BC/" title="商业地产营运篇之 04- 营运过程管理之经营预警与辅导">http://yoursite.com/2020/04/03/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E8%90%A5%E8%BF%90%E7%AF%87%E4%B9%8B04-%E8%90%A5%E8%BF%90%E8%BF%87%E7%A8%8B%E7%AE%A1%E7%90%86%E4%B9%8B%E7%BB%8F%E8%90%A5%E9%A2%84%E8%AD%A6%E4%B8%8E%E8%BE%85%E5%AF%BC/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
