@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>HDFS Federation 设计动机与基本原理 | Hexo</title>
-  <meta name="keywords" content=" Hadoop ">
-  <meta name="description" content="HDFS Federation 设计动机与基本原理 | Hexo">
+  <title>商业地产营运篇之 15- 风险控制之财产保险 | Hexo</title>
+  <meta name="keywords" content=" 商业地产营运 ">
+  <meta name="description" content="商业地产营运篇之 15- 风险控制之财产保险 | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="在商业物业的业主中, 很多人会长期持有物业, 以期持久获得租金回报。对于自己购买的物业, 他们最担心的问题主要包括以下三个方面: 一是物业的日常维修保养； 二是物业的大修或设施设备的更新改造； 三是物业遇到自然灾害或意外事故时毁损灭失的风险。 物业的日常维修保养  由商业管理公司负责, 维修保养的费用已包含在业主或实际使用人支付的物业服务费中; 如物业需要进行大修或设施设备需要更新改造, 商业管理">
 <meta property="og:type" content="article">
@@ -707,9 +707,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-HDFS-Federation设计动机与基本原理" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-商业地产营运篇之15-风险控制之财产保险" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">HDFS Federation 设计动机与基本原理</h1>
+        <h1 class="article-title">商业地产营运篇之 15- 风险控制之财产保险</h1>
     
     <div class="article-meta">
         
@@ -717,26 +717,26 @@
         
         <span class="book">
             
-                <a  data-rel="大数据技术">大数据技术</a>
+                <a  data-rel="运营管理">运营管理</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color2">Hadoop</a>
+            <a class="color2">商业地产营运</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-04-02 13:43:03'>2020-04-01 11:21</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-03 17:29:31'>2020-04-03 17:21</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:1.8k</span>
+        <span>字数:3.7k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -771,57 +771,44 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>HDFS Federation 是 Hadoop 最新发布版本 Hadoop-0.23.0 中为解决 HDFS 单点故障而提出的 namenode 水平扩展方案。该方案允许 HDFS 创建多个 namespace 以提高集群的扩展性和隔离性。本篇文章主要介绍了 HDFS Federation 的设计动机和基本原理。 </p>
-<p><strong>1. 当前 HDFS 概况 </strong></p>
-<p><strong>1.1 当前 HDFS 架构 </strong></p>
-<p> 当前 HDFS 包含两层结构：  </p>
-<p>（1） <strong>Namespace</strong> 管理目录，文件和数据块。它支持常见的文件系统操作，如创建文件，修改文件，删除文件等。  </p>
-<p>（2） <strong>Block Storage</strong> 有两部分组成：  </p>
-<p><strong>Block Management</strong> 维护集群中 datanode 的基本关系，它支持数据块相关的操作，如：创建数据块，删除数据块等，同时，它也会管理副本的复制和存放。</p>
-<p>  <strong>Physical Storage</strong> 存储实际的数据块并提供针对数据块的读写服务。  </p>
-<p>【Block Storage 的这两部分分别在 namenode 和 datanode 上实现，所以该模块由 namenode 和 datanode 分工完成】 </p>
-<p><img src="/2020/04/01/HDFS-Federation%E8%AE%BE%E8%AE%A1%E5%8A%A8%E6%9C%BA%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/01.jpg" alt></p>
-<p> 当前 HDFS 架构只允许整个集群中存在一个 namespace，而该 namespace 被仅有的一个 namenode 管理。这个架构使得 HDFS 非常容易实现，但是，它（见上图）在具体实现过程中会出现一些模糊点，进而导致了很多局限性（下面将要详细说明），当然这些局限性只有在拥有大集群的公司，像 baidu，腾讯等出现。  </p>
-<p><strong>1.2 当前 HDFS 局限性 </strong></p>
-<p><strong>【Block Storage 和 namespace 高耦合】</strong></p>
-<p> 当前 namenode 中的 namespace 和 block management 的结合使得这两层架构耦合在一起，难以让其他可能 namenode 实现方案直接使用 block storage。  </p>
-<p><strong>【namenode 扩展性】</strong></p>
-<p>  HDFS 的底层存储是可以水平扩展的（解释：底层存储指的是 datanode，当集群存储空间不够时，可简单的添加机器已进行水平扩展），但 namespace 不可以。当前的 namespace 只能存放在单个 namenode 上，而 namenode 在内存中存储了整个分布式文件系统中的元数据信息，这限制了集群中数据块，文件和目录的数目。  </p>
-<p><strong>【性能】</strong></p>
-<p>  文件操作的性能制约于单个 namenode 的吞吐量，单个 namenode 当前仅支持约 60K 的 task，而下一代 Apache MapReduce 将支持多余 100K 的并发任务，这隐含着要支持多个 namenode。</p>
-<p><strong>【隔离性】</strong></p>
-<p> 现在大部分公司的集群都是共享的，每天有来自不同 group 的不同用户提交作业。单个 namenode 难以提供隔离性，即：某个用户提交的负载很大的 job 会减慢其他用户的 job，单一的 namenode 难以像 HBase 按照应用类别将不同作业分派到不同 namenode 上。  </p>
-<p><strong>2.HDFS Federation</strong></p>
-<p><strong>2.1 为什么采用 Federation</strong></p>
-<p>​    </p>
-<p> 采用 Federation 的最主要原因是简单，Federation 能够快速的解决了大部分单 Namenode 的问题。           </p>
-<p> Federation 整个核心设计实现大概用了 4 个月。大部分改变是在 Datanode、Config 和 Tools，而 Namenode 本身的改动非常少，这样 Namenode 原先的鲁棒性不会受到影响。这使得该方案与之前的 HDFS 版本兼容。  </p>
-<p><strong>2.2Federation 架构 </strong>  </p>
-<p><img src="/2020/04/01/HDFS-Federation%E8%AE%BE%E8%AE%A1%E5%8A%A8%E6%9C%BA%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/02.jpg" alt> </p>
-<p> 为了水平扩展 namenode，federation 使用了多个独立的 namenode/namespace。这些 namenode 之间是联合的，也就是说，他们之间相互独立且不需要互相协调，各自分工，管理自己的区域。分布式的 datanode 被用作通用的数据块存储存储设备。每个 datanode 要向集群中所有的 namenode 注册，且周期性地向所有 namenode 发送心跳和块报告，并执行来自所有 namenode 的命令。</p>
-<p>  一个 block pool 由属于同一个 namespace 的数据块组成，每个 datanode 可能会存储集群中所有 block pool 的数据块。  </p>
-<p> 每个 block pool 内部自治，也就是说各自管理各自的 block，不会与其他 block pool 交流。一个 namenode 挂掉了，不会影响其他 namenode。</p>
-<p>  某个 namenode 上的 namespace 和它对应的 block pool 一起被称为 namespace volume。它是管理的基本单位。当一个 namenode/nodespace 被删除后，其所有 datanode 上对应的 block pool 也会被删除。当集群升级时，每个 namespace volume 作为一个基本单元进行升级。</p>
-<p><strong>2.3Federation 关键技术点 </strong></p>
-<p> <strong>【命名空间管理】</strong></p>
-<p>  Federation 中存在多个命名空间，如何划分和管理这些命名空间非常关键。在 Federation 中并采用“文件名 hash”的方法，因为该方法的 locality 非常差，比如：查看某个目录下面的文件，如果采用文件名 hash 的方法存放文件，则这些文件可能被放到不同 namespace 中，HDFS 需要访问所有 namespace，代价过大。为了方便管理多个命名空间，HDFS Federation 采用了经典的 Client Side Mount Table。  </p>
-<p><img src="/2020/04/01/HDFS-Federation%E8%AE%BE%E8%AE%A1%E5%8A%A8%E6%9C%BA%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/03.jpg" alt></p>
-<p>​     如上图所示，下面四个深色三角形代表一个独立的命名空间，上方浅色的三角形代表从客户角度去访问的子命名空间。各个深色的命名空间 Mount 到浅色的表中，客户可以访问不同的挂载点来访问不同的命名空间，这就如同在 Linux 系统中访问不同挂载点一样。这就是 HDFS Federation 中命名空间管理的基本原理：将各个命名空间挂载到全局 mount-table 中，就可以做将数据到全局共享；同样的命名空间挂载到个人的 mount-table 中，这就成为应用程序。 </p>
-<p><strong>2.4 主要优点 </strong>  </p>
-<p><strong>【扩展性和隔离性】</strong>  </p>
-<p> 支持多个 namenode 水平扩展整个文件系统的 namespace。可按照应用程序的用户和种类分离 namespace volume，进而增强了隔离性。  </p>
-<p><strong>【通用存储服务】</strong>  </p>
-<p>Block Pool 抽象层为 HDFS 的架构开启了创新之门。分离 block storage layer 使得： </p>
-<p> &lt;1&gt; 新的文件系统（non-HDFS）可以在 block storage 上构建。</p>
-<p>  &lt;2&gt; 新的应用程序（如 HBase）可以直接使用 block storage 层。</p>
-<p>  &lt;3&gt; 分离的 block storage 层为将来完全分布式 namespace 打下基础。  </p>
-<p><strong>【设计简单】</strong></p>
-<p>  Federation 整个核心设计实现大概用了 4 个月。大部分改变是在 Datanode、Config 和 Tools 中，而 Namenode 本身的改动非常少，这样 Namenode 原先的鲁棒性不会受到影响。虽然这种实现的扩展性比起真正的分布式的 Namenode 要小些，但是可以迅速满足需求，另外 Federation 具有良好的向后兼容性，已有的单 Namenode 的部署配置不需要任何改变就可以继续工作  。</p>
-<p><strong>3.HDFS Federation 不足 </strong>  </p>
-<p><strong>【单点故障问题】</strong>  </p>
-<p>HDFS Federation 并没有完全解决单点故障问题。虽然 namenode/namespace 存在多个，但是从单个 namenode/namespace 看，仍然存在单点故障：如果某个 namenode 挂掉了，其管理的相应的文件便不可以访问。Federation 中每个 namenode 仍然像之前 HDFS 上实现一样，配有一个 secondary namenode，以便主 namenode 挂掉一下，用于还原元数据信息。  </p>
-<p><strong>【负载均衡问题】</strong></p>
-<p>  HDFS Federation 采用了 Client Side Mount Table 分摊文件和负载，该方法更多的需要人工介入已达到理想的负载均衡。 </p>
+        <p>在商业物业的业主中, 很多人会长期持有物业, 以期持久获得租金回报。对于自己购买的物业, 他们最担心的问题主要包括以下三个方面:</p>
+<p>一是物业的日常维修保养；</p>
+<p>二是物业的大修或设施设备的更新改造；</p>
+<p>三是物业遇到自然灾害或意外事故时毁损灭失的风险。</p>
+<p><strong>物业的日常维修保养 </strong> 由商业管理公司负责, 维修保养的费用已包含在业主或实际使用人支付的物业服务费中; 如物业需要进行大修或设施设备需要更新改造, 商业管理公司负责组织实施大修或更新改造, 费用从物业的维修基金中支出; 因此, 前两个方面的担心已经有了保障。但是对于第三个方面的担心, 以及由此带来的损失, 无论是业主还是商业管理公司, 都是难以承受的, 财产保险就是为了解决这个问题。</p>
+<p><strong>财产保险 </strong> 是指投保人按照合同约定, 向保险人交付保险费, 保险人按保险合同的约定对所承保的财产及其有关利益因自然灾害或意外事故造成的损失承担赔偿责任的保险。商业管理中的财产保险, 是指商业管理公司按照业主的指示, 对其受托管理的商业物业的建筑物、机器设备等财产所投的保险, 以及对在运营管理中可能发生的风险、损失及赔偿责任等所投的保险。</p>
+<p><strong>商业管理中的财产保险, 对业主及商业管理公司均具有重要意义。</strong>财产保险具有及时补偿财产损失的作用, 商业物业如果遇到自然灾害或重大意外事故而毁损或灭失的, 将给业主造成无法挽回的损失; 商业物业投保财产保险后, 一旦发生这样的损失, 将由保险公司予以赔偿, 保障业主在财务上的稳定性。商业管理公司受托管理商业物业, 一旦发生危险, 可能给不特定的社会公众造成人身损害或财产损失; 商业管理公司投保公众责任险等保险后, 这些损失将由保险公司进行赔偿。</p>
+<p>财产保险的种类繁多、保险公司亦数量众多, 商业管理公司以何种方式投保可实现成本最小化、保障利益最大化? 商业管理中应投保哪些险种? 保险事务如何管理? 企业集团通过多年的实践, 摸索出一套比较成熟的、适合大型集团公司的投保模式、保险策略和保险管理方式。</p>
+<hr>
+<p><strong>一、总对总、总分管理的投保模式</strong></p>
+<p>大型集团公司往往有各种各样的投保模式, 有的是由其下属企业各自投保, 有的是将其保险全部外包给保险中介公司, 还有一些集团公司自己投资或参股保险公司并由该保险公司承保。对于集团化运作的商业管理公司而言, 因商业管理的业务相对集中统一, 对规范化、统一管理和统一保险政策的要求更高, 需要采取一种符合行业特点、适合自身需求的模式进行财产保险的投保。</p>
+<p>商业管理公司在商业管理中的财产保险投保模式, 采用的是 <strong> 集团的总对总、总分管理的投保模式</strong>。</p>
+<p><strong>总对总、总分管理的投保模式 </strong>, 是指集团总部与保险公司总部之间建立起合作关系, 制定统一的保险政策和费率标准, 由企业集团的各地公司与保险公司的各地分公司具体办理投保和保险相关事宜。为节省保险费用成本, 集团总部将全集团(含集团总部及各地公司) 保险的险种、投保资产范围、保险期限、其他具体需求等打包列出, 选择一家规模较大、在全国范围内均有分公司的综合性保险公司承保。在总对总、总分管理的投保模式下, 企业集团总部与保险公司总部签订保险合作的总体框架协议, 具体明确保险险种、费率、承保范围及其他权利义务、责任等, 并由双方各自的下属公司按照总体框架协议进行投保和办理保险事宜。</p>
+<p><strong>在总对总、总分管理的模式下, 需要双方总部来确定的保险政策 </strong> 包括: 投保人, 被保险人的范围, 保险人的范围, 保险标的的范围, 保险险种及各险种的保险条款, 保险费率, 保险服务响应等。在双方总部确定保险政策后, 企业各地公司即可按照约定与保险公司的当地分公司具体办理保险事宜, 包括投保、缴费和续费、保险案件申报和理赔等。</p>
+<p><strong>总对总、总分管理的投保模式具有其自身优越性</strong>。首先, 这种投保模式减少了保险中介公司等中间环节, 由有保险需求的各地公司直接找保险公司的当地分公司投保和办理理赔, 减少了投保和理赔的中间程序, 提高了保险事务的工作效率; 其次, 这种投保模式可发挥集团总部的谈价优势, 如果采取招投标的方式选择保险公司, 更可选择保费报价最低的保险公司投保, 大量节省了保费成本; 再次, 由同一家保险公司组织其全国的分公司承保, 对保险的后期服务有保障, 有利于保险公司对企业集团内所有公司的保险需求和保险事务做出迅速、积极的响应, 便于双方统筹安排; 最后, 由集团总部统一保险政策, 便于保险事务的管理和处理, 当企业各地公司与保险公司的各地公司就保险问题出现分歧、不能解决时, 可提交到各自的总部层面协调解决。</p>
+<hr>
+<p><strong>二、全覆盖的风险保障</strong></p>
+<p>投保人在确定保险险种时应主要考虑风险保障的覆盖范围。风险保障覆盖范围有全覆盖、重点覆盖两种选择。为了实现对商业物业全方位的保障, 企业集团在制定保险政策时可选择风险保障全覆盖的保险策略, 虽然这样做会增加保险费用。</p>
+<p><strong>企业可从两个方面进行全覆盖的保险。</strong></p>
+<p><strong>一方面按被保险的对象</strong>, 分为投保人的资产和人员、非投保人的资产和人员; 商业管理公司不但为处在其管理之下的资产和人员进行投保, 也为非受其管理的资产和人员进行投保。商业管理公司对其管理之下的资产和人员投保的险种包括: 建筑工程一切险、安装工程一切险、财产一切险、机器损坏险、现金综合险、雇主责任险和雇员忠诚保险等; 对其他资产和人员投保的险种包括公众责任险、第三者责任险等。</p>
+<p>另一方面,<strong>企业的保险覆盖范围 </strong> 包含被保险对象从产生、存续到消亡的全过程, 实现了全时间、全方位的保险保障。以商业物业即建筑物本身为例, 在建设阶段, 以建筑工程一切险保障建筑物从开工到试营业日或开业日的阶段, 以财产一切险保障其从开业日到业主持有建筑物始终的全过程, 其他资产则保障到该资产灭失或其账面价值消失为止。</p>
+<p><strong>商业管理中最重要、最常用的险种及保障范围</strong>, 如（表 13-1 商业管理中常用险种及主要保障范围表）</p>
+<p> <img src="/2020/04/03/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E8%90%A5%E8%BF%90%E7%AF%87%E4%B9%8B15-%E9%A3%8E%E9%99%A9%E6%8E%A7%E5%88%B6%E4%B9%8B%E8%B4%A2%E4%BA%A7%E4%BF%9D%E9%99%A9/01.jpg" alt></p>
+<p>商业管理公司在管理商业物业时, 为了实现全方位、全过程的风险保障覆盖, 除了为自己所管理的资产及可能发生的风险、责任事故投保外, 还要求商家为其承租单元之内的财产及其经营行为可能涉及的公众责任进行投保。要求商家投保的险种, 一般包括装修期间的安装工程一切险、经营期间的财产一切险和公众责任险, 以实现商家从进场装修到租赁期限届满期间的全过程有保险保障。</p>
+<hr>
+<p>三、保险事务的管理制度</p>
+<p>为了规范而全面地管理全集团范围内的保险事务, 企业集团要对财产保险事务实行统筹管理, 专门建立财产保险管理制度。企业集团的财产保险管理制度, 从保险事务管理的组织机构和职责、投保及续保工作管理、保险理赔及其他保险工作管理、保险工作的检查与考核等方面, 进行了详细规定。建立起全集团统一的财产保险管理制度后, 就可以统一全集团各个公司的财产保险政策, 包括投保人及保险费的分担、投保险种及被保险的财产范围、保险期限、投保或续保的程序、保险事务审批流程等, 为集团总部、各系统总部、各地公司开展财产保险工作提供了制度保障。</p>
+<p><strong>企业集团财产保险管理制度的特点之一,</strong>是针对财产保险事务设置专门的负责机构。集团总部与保险公司总部建立起总对总的合作关系后, 集团从总部层面到各地公司层面均建立起保险事务的专门负责机构, 并要求保险公司总部和地方分公司都成立专门的保险服务小组, 服务于企业集团总部和各地公司。</p>
+<p><strong>企业集团总部的保险事务负责机构 </strong> 为财产保险管理领导小组, 由总部负责财务、安全监督、审计、法律等方面的负责人组成, 领导小组的主要职责是负责制定、颁布和修改财产保险管理制度, 选定保险公司, 监督、指导各地公司执行财产保险管理制度, 审核地方公司上报的财产保险资料, 以及决定集团总部财产保险方面的其他重大事项等。财产保险管理领导小组指定一个专门的内部机构作为保险事务的归口管理部门, 设立专门的保险事务联络员负责财产保险的日常管理。</p>
+<p><strong>企业集团在地方公司层面, 也成立专门的财产保险管理小组</strong>, 由各地公司总经理、投保专员、理赔专员组成。各地公司总经理全面负责本公司的保险投保、理赔及培训等工作; 投保专员负责本公司范围内的资产投保、续保, 保险资料的收集、汇总和管理, 保险数据统计等工作; 理赔专员负责本公司的财产保险案件理赔、跟进及协调处理, 统计、上报理赔数据, 保险案件、理赔资料的收集、汇总和管理等。</p>
+<hr>
+<p><strong>四、保险的信息化管理</strong></p>
+<p>随着保险事务日益增多, 保险的信息化管理成为保险投保、理赔、案件管理、风险预防的重要管理手段。</p>
+<p><strong>保险事务的信息化管理比单靠人工管理具有很大优势。</strong>信息化管理使投保和续保变得方便、快捷, 可防范人为失误, 例如保险费的计算、保险金的计算、保险期限的管理、续保提醒等都能实现自动化; 信息化管理还使保险数据便于统计, 投保人的保险管理系统可与保险公司的信息系统进行对接, 实现保险资料的标准化和投保理赔的“傻瓜式”操作, 并可加入投保、续保、理赔的提醒功能, 方便双方进行保险费用结算和理赔结算。</p>
+<p><strong>在商业管理中使用信息化软件系统管理财产保险, 有利于投保人对财产保险的投保、续保、理赔、灾害预警、保险数据统计等进行管理, 并可方便地管理保险的历史资料和案件记录, 使得保险事务的处理更加高效和规范化。</strong>商业管理公司依托集团自行开发的保险信息化管理系统, 对总部及各地公司的财产保险实现了全面信息化管理, 自动提醒和灾害预警是这套系统的两个特色功能。</p>
+<p><strong>(1)保险期限到期和续保自动提醒功能。</strong>集团总部或各地公司投保的所有保险, 只要保险期限将要届满, 该系统便会自动提示。在保险期限届满前的段期间内(提前设定的), 系统在该项保险管理页面亮黄灯警示; 保险期限届满时, 页面亮红灯警示; 该项保险的投保专员进行停保或续保的后续操作后, 页面亮绿灯通过。由于企业全集团上下有成千上万个保险项目, 这一功能极大地方便了投保专员的保险事务管理。</p>
+<p><strong>(2)灾害预警系统模块。</strong>灾害预警系统与中央气象台灾害预警平台相关联, 每当中央气象台发出灾害气象预报时, 系统自动提示可能受影响的各地公司及相关负责人员, 便于各地公司预防灾害天气、抗险抗灾、减少损失，并且及早为保险理赔做好准备。（图 13-4）</p>
+<p> <img src="/2020/04/03/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E8%90%A5%E8%BF%90%E7%AF%87%E4%B9%8B15-%E9%A3%8E%E9%99%A9%E6%8E%A7%E5%88%B6%E4%B9%8B%E8%B4%A2%E4%BA%A7%E4%BF%9D%E9%99%A9/02.jpg" alt></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 15023696012@163.com或微信：yitianyu271 </span>
@@ -835,12 +822,12 @@
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>HDFS Federation 设计动机与基本原理</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">1.8k</span></p>
+    <p><span class="copy-title">文章标题:</span>商业地产营运篇之 15- 风险控制之财产保险</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">3.7k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="YYS_三师兄">YYS_三师兄</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-04-01, 11:21:14</p>
-    <p><span class="copy-title">最后更新:</span>2020-04-02, 13:43:03</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/01/HDFS-Federation%E8%AE%BE%E8%AE%A1%E5%8A%A8%E6%9C%BA%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/" title="HDFS Federation 设计动机与基本原理">http://yoursite.com/2020/04/01/HDFS-Federation%E8%AE%BE%E8%AE%A1%E5%8A%A8%E6%9C%BA%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/</a>
+    <p><span class="copy-title">发布时间:</span>2020-04-03, 17:21:33</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-03, 17:29:31</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/03/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E8%90%A5%E8%BF%90%E7%AF%87%E4%B9%8B15-%E9%A3%8E%E9%99%A9%E6%8E%A7%E5%88%B6%E4%B9%8B%E8%B4%A2%E4%BA%A7%E4%BF%9D%E9%99%A9/" title="商业地产营运篇之 15- 风险控制之财产保险">http://yoursite.com/2020/04/03/%E5%95%86%E4%B8%9A%E5%9C%B0%E4%BA%A7%E8%90%A5%E8%BF%90%E7%AF%87%E4%B9%8B15-%E9%A3%8E%E9%99%A9%E6%8E%A7%E5%88%B6%E4%B9%8B%E8%B4%A2%E4%BA%A7%E4%BF%9D%E9%99%A9/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
